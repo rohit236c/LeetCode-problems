@@ -6,11 +6,11 @@ int lengthOfSubstring(string s) {
 	set<char>set;
 	int n = s.length();
 	int i = 0, j = 0, ans = 0;
-	while(i < n && j < n) {
-		if(set.find(s[j]) == set.end()) {
+	while (i < n && j < n) {
+		if (set.find(s[j]) == set.end()) {
 			set.insert(s[j]);
 			j++;
-			ans = max(ans,j-i);
+			ans = max(ans, j - i);
 		}
 		else {
 			set.erase(s[i]);
@@ -23,6 +23,6 @@ int lengthOfSubstring(string s) {
 int main() {
 
 	int ans = lengthOfSubstring("abcabcbb");
-	cout<<ans; 	
+	cout << ans;
 	return 0;
 }
