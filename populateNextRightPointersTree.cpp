@@ -10,7 +10,7 @@ void populateRightNeighbour(Tree*root) {
 		if (root->right != NULL) {
 			root->left->neighbour = root->right;
 		}
-// agr aisa nhi hai toh parent/root ke neighbour pr ja
+		// agr aisa nhi hai toh parent/root ke neighbour pr ja
 		// aur uske bche ko root ke left mei daal de
 		else {
 			Tree*parentNeigbour = root->neighbour;
@@ -38,11 +38,31 @@ void populateRightNeighbour(Tree*root) {
 			parentNeigbour = parentNeigbour->neighbour;
 		}
 	}
-	
-	//pehle right ko call kr 
+
+	//pehle right ko call kr
 	populateRightNeighbour(root->right);
 	//fir left ko call kr
 	populateRightNeighbour(root->left);
+}
+void connect(TreeLinkNode *A) {
+	TreeLinkNode *nlv = NULL, *pre = NULL; //pre:previous node, nlv:first element of next level
+	while (A) {
+		if (pre) pre->next = A->left ? A->left : A->right;
+		
+		else nlv = A->left ? A->left : A->right;
+
+		if (A->left && A->right) {
+			A->left->next = A->right;
+			pre = A->right;
+		}
+		else if (A->left || A->right) pre = A->left ? A->left : A->right;
+
+		if (A->next) A = A->next;
+		else {
+			A = nlv;
+			pre = nlv = NULL;
+		}
+	}
 }
 
 int main() {

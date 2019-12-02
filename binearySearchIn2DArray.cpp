@@ -7,6 +7,7 @@ pair<int, int> binearySearchInto2DArray(int arr[][100], int key, int m, int n) {
 	int high = (m * n) - 1;
 	pair<int, int>p;
 	while (start <= high) {
+		// int middle = left + (right - left) / 2;
 		int mid = (start + high) / 2;
 		int r = mid / n;
 		int c = mid % n;
@@ -45,7 +46,7 @@ int main() {
 	cout << arr[p.first][p.second] << endl;
 	
 	//convert 2D into 1D using c = i % (no of columns) && r = i/(number of columns)
-	
+
 	// for (int i = 0; i < m * n; ++i)
 	// {
 	// 	int r = i / n;
