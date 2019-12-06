@@ -22,7 +22,7 @@ int lengthOfSubstring(string s) {
 
 int main() {
 
-	int ans = lengthOfSubstring("abcabcbb");
+	int ans = lengthOfSubstring("adddababb");
 	cout << ans;
 	return 0;
 }
