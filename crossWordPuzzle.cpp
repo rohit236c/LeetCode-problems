@@ -1,94 +1,180 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include <vector>
 using namespace std;
 
-std::vector<string> dic = {"PUNJAB", "JHARKHAND", "MIZORAM", "MUMBAI"};
+//======================================
 
-bool isValidToPutHorizontal(int x, int y, std::vector<string> board, string curWord) {
-	int n = curWord.length();
-	for (int i = 0; i < n; i++) {
-		if (board[x + i][y] == '#' ||
-		        board[x + i][y] == curWord[i]) {
-			board[x + i][y] = curWord[i];
+vector<vector<char>> board = {
+	{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+	{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+	{'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+	{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+	{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+	{'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+	{'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+	{'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+	{'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+	{'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}
+};
+
+bool canPlaceVertical(string word, int r, int c)
+{
+    if (r == 0 && word.length() != board.size())
+    {
+        if (board[r + word.length()][c] != '+')
+            return false;
+    }
+    else if ((r + word.length()) >= board.size() && word.length() != board.size())
+    {
+        if (board[r - 1][c] != '+')
+            return false;
+    }
+    else
+    {
+        if (board[r - 1][c] != '+' || board[r + word.length()][c] != '+')
+            return false;
+    }
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (!(board[r + i][c] == '-' || word[i] == board[r + i][c]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<bool> placeWordVertical(string word, int r, int c)
+{
+    vector<bool> pos(word.length(), false);
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[r + i][c] == '-')
+        {
+            board[r + i][c] = word[i];
+            pos[i] = true;
+        }
+    }
+
+    return pos;
+}
+
+void unplaceWordVertical(int r, int c, vector<bool> pos)
+{
+    for (int i = 0; i < pos.size(); i++)
+    {
+        if (pos[i])
+        {
+            board[r + i][c] = '-';
+        }
+    }
+}
+bool canPlaceHorizontal(string word, int r, int c)
+{
+	if (c == 0 && word.length() != board[0].size())
+	{
+		if (board[r][c + word.length()] != '+')
+			return false;
+	}
+	else if ((c + word.length()) >= board[0].size() && word.length() != board[0].size())
+	{
+		if (board[r][c - 1] != '+'){
+			return false;
 		}
-		else {
+	}
+	else
+	{
+		if (board[r][c - 1] != '+' || board[r][c + word.length()] != '+')
+			return false;
+	}
+
+	for (int i = 0; i < word.length(); i++)
+	{
+		if (!(board[r][c + i] == '-' || word[i] == board[r][c + i]))
+		{
 			return false;
 		}
 	}
 	return true;
 }
-bool isValidToPutVertical(int x, int y, std::vector<string> &board, string curWord) {
-	int n = curWord.length();
 
-	for (int i = 0; i < n; i++) {
-		if (board[x][y + i] == '#' ||
-		        board[x][y + i] == curWord[i]) {
-			board[x][y + i] = curWord[i];
-		}
-		else {
-			return false;
+vector<bool> placeWordHorizontal(string word, int r, int c)
+{
+	vector<bool> pos(word.length(), false);
+	for (int i = 0; i < word.length(); i++)
+	{
+		if (board[r][c + i] == '-')
+		{
+			board[r][c + i] = word[i];
+			pos[i] = true;
 		}
 	}
-	return true;
+
+	return pos;
 }
-bool crossWord(std::vector<string> &board, int vidx, int m) {
-	if (vidx >= dic.size()) {
-		//print board..
-		for (auto str : board) {
-			for (auto ch : str) {
-				cout << ch << "";
-			}
-			cout << endl;
-		}
-		return true;
-	}
 
-	string curWord = dic[vidx];
-	int maxLen = m - curWord.length();
-	bool res = false;
-
-	//check for horizontal position
-	if (!res) {
-		for (int i = 0; i < m; ++i)
+void unplaceWordHorizontal(int r, int c, vector<bool> pos)
+{
+	for (int i = 0; i < pos.size(); i++)
+	{
+		if (pos[i])
 		{
-			for (int j = 0; j <= maxLen; j++) {
-				if (isValidToPutHorizontal(j, i, board, curWord)) {
-					res = res || crossWord(board, vidx + 1, m);
-					//print board..
-				}
-			}
-		}
-		for (int i = 0; i < m; ++i)
-		{
-			for (int j = 0; j <= maxLen; j++) {
-				if (isValidToPutVertical(i, j, board, curWord)) {
-					res = res || crossWord(board, vidx + 1, m);
-				}
-			}
+			board[r][c + i] = '-';
 		}
 	}
-	return res;
+}
+
+int crossWordUtil(vector<string> &words, int idx)
+{
+    if (idx == words.size())
+    {
+        for (vector<char> ar : board)
+        {
+            for (char ele : ar)
+            {
+                cout << ele << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
+
+    string word = words[idx];
+    int count = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+
+            if (canPlaceHorizontal(word, i, j))
+            {	
+                vector<bool> pos = placeWordHorizontal(word, i, j);
+                count += crossWordUtil(words, idx + 1);
+                unplaceWordHorizontal(i,j,pos);
+            }
+
+            if (canPlaceVertical(word, i, j))
+            {
+            	
+                vector<bool> pos = placeWordVertical(word, i, j);
+                count += crossWordUtil(words, idx + 1);
+                unplaceWordVertical(i,j,pos);
+            }
+        }
+    }
+    return count;
+}
+
+void crossWord()
+{
+    vector<string> words = {"agra", "norway", "england", "gwalior"};
+    cout << crossWordUtil(words, 0) << endl;
 }
 
 
 int main() {
+	crossWord();
 
-	int n1 = 10;
-
-	// board to hold the grid of puzzle
-	vector<string> board;
-
-	// take input of puzzle in board
-	// input of grid of size n1 x n1
-	board.push_back("*#********");
-	board.push_back("*#********");
-	board.push_back("*#****#***");
-	board.push_back("*##***##**");
-	board.push_back("*#****#***");
-	board.push_back("*#****#***");
-	board.push_back("*#****#***");
-	board.push_back("*#*######*");
-	board.push_back("*#********");
-	board.push_back("***#######");
-	cout<<crossWord(board, 0, n1);
 	return 0;
 }

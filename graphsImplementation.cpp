@@ -267,7 +267,12 @@ priority_queue<int>pq;
 void kthLargest(int src, int dest, int wt , std::vector<bool> &visited, int k) {
 
 	if (src == dest) {
-		pq.push(wt);
+		if (k > 0) {
+			pq.push(wt);
+		} else if (pq.top() > wt) {
+			pq.pop();
+			pq.push(wt);
+		}
 		return ;
 	}
 
@@ -283,6 +288,26 @@ void kthLargest(int src, int dest, int wt , std::vector<bool> &visited, int k) {
 	visited[src] = false;
 }
 
+void Bfs(std::vector<bool> &visited) {
+	queue<int>q;
+	int src = 0;
+
+	q.push(src);
+	visited[src] = true;
+	while (!q.empty()) {
+		int curNode = q.front();
+		cout << curNode << endl;
+		q.pop();
+		for (Edge*e : graph[curNode]) {
+			int v = e->v;
+			if (!visited[v]) {
+				q.push(v);
+				visited[v] = true;
+			}
+		}
+	}
+
+}
 
 void solve()
 {
@@ -292,8 +317,8 @@ void solve()
 		graph.push_back(ar);
 	}
 
-	addEdge(0, 3, 10);
 	addEdge(0, 1, 10);
+	addEdge(0, 3, 10);
 	addEdge(1, 2, 10);
 	addEdge(2, 3, 40);
 	addEdge(3, 4, 2);
@@ -319,13 +344,14 @@ void solve()
 	// bool ans = HasHamiltonianPath(src, 1 , visited, to_string(src) + "->", 7);
 	// bool ans = HasHamiltonianCycle(src, 1 , src ,visited, to_string(src) + "->", 7);
 	// cout << ans;
-	// int k = 1;
-	// kthLargest(0, 6, 0, visited, 0);
-	// while(k) {
-	//     pq.pop();
-	//     k--;
+	// int k = 7;
+	// kthLargest(0, 6, 0, visited, 7);
+	// while (k) {
+	// 	pq.pop();
+	// 	k--;
 	// }
-	// cout<<pq.top();
+	// cout << pq.top();
+	Bfs(visited);
 }
 
 int main()
