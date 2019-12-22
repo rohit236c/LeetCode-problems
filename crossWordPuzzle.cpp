@@ -24,7 +24,7 @@ bool canPlaceVertical(string word, int r, int c)
         if (board[r + word.length()][c] != '+')
             return false;
     }
-    else if ((r + word.length()) >= board.size() && word.length() != board.size())
+    else if ((r + word.length()) >= board.size())
     {
         if (board[r - 1][c] != '+')
             return false;
@@ -77,7 +77,7 @@ bool canPlaceHorizontal(string word, int r, int c)
 		if (board[r][c + word.length()] != '+')
 			return false;
 	}
-	else if ((c + word.length()) >= board[0].size() && word.length() != board[0].size())
+	else if ((c + word.length()) >= board[0].size())
 	{
 		if (board[r][c - 1] != '+'){
 			return false;
