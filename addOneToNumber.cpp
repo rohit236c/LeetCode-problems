@@ -183,17 +183,38 @@ int removeDuplicates(std::vector<int> &nums) {
 }
 int removeElement(vector<int>& nums, int val) {
 	int itr = 0, i = nums.size() - 1, cnt = 0;
-	while(itr < i) {
-		if(nums[itr] == val) {
+	while (itr < i) {
+		if (nums[itr] == val) {
 			swap(nums[i], nums[itr]);
 			i--;
 			continue;
-		} 
+		}
 		itr++;
 		cnt++;
 	}
 	return itr + 1;
 }
+void nextPermutation(vector<int>& nums) {
+	int n = nums.size();
+	int i = n - 2;
+	while (i >= 0 && nums[i] >= nums[i + 1]) i--;
+
+	if (i >= 0) {
+		int j = n - 1;
+		while (j >= 0 && nums[i] >= nums[j]) j--;
+
+		swap(nums[i], nums[j]);
+	}
+	//reverse the elements from i+1 to n
+	int k = i + 1;
+	int m = n - 1;
+	while (k < m) {
+		swap(nums[k], nums[m]);
+		k++;
+		m--;
+	}
+}
+
 int main() {
 	int n, target;
 	cin >> n >> target;
@@ -216,7 +237,7 @@ int main() {
 	// }
 	// cout << threeSumClosest(v, target);
 	// cout << removeDuplicates(nums) << endl;
-	cout<<removeElement(nums, target)<<endl;
+	cout << removeElement(nums, target) << endl;
 	for (int i : nums) {
 		cout << i << " ";
 	}
