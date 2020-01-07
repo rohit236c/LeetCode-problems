@@ -214,6 +214,90 @@ void nextPermutation(vector<int>& nums) {
 		m--;
 	}
 }
+int search(vector<int>& nums, int target) {
+	int beg = 0, end = nums.size() - 1, mid;
+	while (beg <= end)
+	{
+		mid = (beg + end) / 2;
+		if (nums[mid] == target)
+			return mid;
+		if (nums[beg] <= nums[mid])
+		{
+			if (target <= nums[mid] && target >= nums[beg])
+				end = mid - 1;
+			else {
+				beg = mid + 1;
+			}
+		}
+		else
+		{
+			if (target >= nums[mid] && target <= nums[end])
+				beg = mid + 1;
+			else
+				end = mid - 1;
+		}
+	}
+	return -1;
+}
+vector<int> searchRange(vector<int>& nums, int target) {
+	int high = nums.size() - 1, start = 0;
+	//           .... 1 1 1 2 2 2 3 4 5
+	//						l   u
+	std::vector<int> range;
+	// lowerbound
+	int lowerbound = -1, upperbound = -1;
+	while (start <= high) {
+		int mid = (start + high) / 2;
+
+		if (nums[mid] == target) {
+			lowerbound = mid;
+			high = mid - 1;
+		}
+		else if (target > nums[mid]) {
+			start = mid + 1;
+		} else {
+			high = mid - 1;
+		}
+	}
+	high = nums.size() - 1;
+	start = 0;
+	while (start <= high) {
+		int mid = (start + high) / 2;
+
+		if (nums[mid] == target) {
+			upperbound = mid;
+			start = mid + 1;
+		}
+		else if (target > nums[mid]) {
+			start = mid + 1;
+		} else {
+			high = mid - 1;
+		}
+	}
+	range.push_back(lowerbound);
+	range.push_back(upperbound);
+
+	return range;
+}
+int searchInsert(vector<int>& nums, int target) {
+	int high = nums.size() - 1, start = 0;
+	int index = -1;
+	while (start <= high) {
+		int mid = (start + high) / 2;
+		if (nums[mid] == target) {
+			index = mid;
+			break;
+		}
+		else if (target >= nums[mid]) {
+			start = mid + 1;
+		} else {
+			high = mid - 1;
+		}
+	}
+	if(index == -1) return start;
+
+	return index;
+}
 
 int main() {
 	int n, target;
@@ -237,11 +321,13 @@ int main() {
 	// }
 	// cout << threeSumClosest(v, target);
 	// cout << removeDuplicates(nums) << endl;
-	cout << removeElement(nums, target) << endl;
-	for (int i : nums) {
-		cout << i << " ";
-	}
-	cout << endl;
+	// cout << removeElement(nums, target) << endl;
+
+	// std::vector<int> v = searchRange(nums, target);
+	cout<<searchInsert(nums, target);
+	// for (int i : v) {
+		// cout << i << " ";
+	// }
 	// int i = 0;
 	// cout << ++i;
 	// cout << i + 1;
