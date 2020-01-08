@@ -1,15 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define MEM(a, b) memset(a, (b), sizeof(a))
-#define FOR(i, j, k, in) for (int i=j ; i<k ; i+=in)
-#define RFOR(i, j, k, in) for (int i=j ; i>=k ; i-=in)
-#define REP(i, j) FOR(i, 0, j, 1)
-#define RREP(i, j) RFOR(i, j, 0, 1)
-#define MP make_pair
-#define PB push_back
-#define INF (int)1e9
-#define EPS 1e-9
-#define MOD 1000000007
 typedef pair<int, int> PII;
 typedef vector<int> VI;
 typedef vector<string> VS;
@@ -234,42 +224,89 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
 	return res;
 }
 vector<int> spiralOrder(vector<vector<int>>& A) {
-	int i = 0,k = 0, l = 0;
-    int m = A.size();
-    int n = A[i].size();
-    
-    vector<int>v;
-    while (k < m && l < n) { 
-        //push row inside the matrix...
-        for (i = l; i < n; ++i) { 
-            v.push_back(A[k][i]); 
-        } 
-        k++; 
-  
-        //push last colm.. inside matrix..
-        for (i = k; i < m; ++i) { 
-            v.push_back(A[i][n - 1]); 
-        } 
-        n--; 
-  
-       	//push last row if left inside matrix
-        if (k < m) { 
-            for (i = n - 1; i >= l; --i) { 
-               v.push_back(A[m - 1][i]); 
-            } 
-            m--; 
-        } 
-  
-       	//push first col inside matrix
-        if (l < n) { 
-            for (i = m - 1; i >= k; --i) { 
-              v.push_back(A[i][l]); 
-            } 
-            l++; 
-        } 
-    }
-    return v;
+	int i = 0, k = 0, l = 0;
+	int m = A.size();
+	int n = A[i].size();
 
+	vector<int>v;
+	while (k < m && l < n) {
+		//push row inside the matrix...
+		for (i = l; i < n; ++i) {
+			v.push_back(A[k][i]);
+		}
+		k++;
+
+		//push last colm.. inside matrix..
+		for (i = k; i < m; ++i) {
+			v.push_back(A[i][n - 1]);
+		}
+		n--;
+
+		//push last row if left inside matrix
+		if (k < m) {
+			for (i = n - 1; i >= l; --i) {
+				v.push_back(A[m - 1][i]);
+			}
+			m--;
+		}
+
+		//push first col inside matrix
+		if (l < n) {
+			for (i = m - 1; i >= k; --i) {
+				v.push_back(A[i][l]);
+			}
+			l++;
+		}
+	}
+	return v;
+
+}
+vector<vector<int>> generateMatrix(int n) {
+	std::vector<std::vector<int>> matrix(n, std::vector<int> (n, 0));
+	int totalNum = (n * n);
+	int k = 0, l = 0, i = 0, t = 0, dir = 0;
+	int num = 1;
+	int r = n - 1;
+	int b = n - 1;
+	int elem = 1;
+	std::vector<int> v;
+
+	if (!n) return matrix;
+
+	while (t <= b && l <= r) {
+		if (dir == 0) {
+			for (int i = l; i <= r; i++) {
+				matrix[t][i] = elem;
+				elem++;
+			}
+			t++;
+			dir = 1;
+		} else if (dir == 1) {
+			for (int i = t; i <= b; i++) {
+				matrix[i][r] = elem;
+				elem++;
+			}
+			r--;
+			dir = 2;
+		} else if (dir == 2) {
+			for (int i = r; i >= l ; i--) {
+				matrix[b][i] = elem;
+				elem++;
+			}
+			b--;
+			dir = 3;
+		} else if (dir == 3) {
+			for (int i = b; i >= t; i--) {
+				matrix[i][l] = elem;
+				elem++;
+			}
+			l++;
+			dir = 0;
+		}
+	}
+
+
+	return matrix;
 }
 //------------------------------///-------------//-------------------//
 void solve() {
@@ -283,10 +320,12 @@ void solve() {
 	cin >> n >> m;
 	VVI intervals(n, std::vector<int> (m, 0));
 	input2D(intervals, n, m);
-	VI ans = spiralOrder(intervals);
+	// VI ans = spiralOrder(intervals);
+	VVI ans = generateMatrix(3);
+	print2D(ans);
 	// VVI ans = merge(intervals);
 	// print2D(ans);
-	printV(ans);
+	// printV(ans);
 	// VVI ans ;
 	// VI k = {1,2};
 	// ans.push_back(k);

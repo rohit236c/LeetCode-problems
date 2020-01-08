@@ -94,7 +94,7 @@ std::vector<std::vector<int>> threeSum(std::vector<int> &nums) {
 	int idx = 0;
 
 	while (idx < nums.size() - 2) {
-		int target  = -nums[idx];
+		int target  = - nums[idx];
 		//Two Sum Problem....
 		int l = idx + 1;
 		int r = nums.size() - 1;
@@ -130,7 +130,10 @@ int threeSumClosest(vector<int>& nums, int target) {
 	int minDiff = 1e9, minSum = 1e9;
 
 	while (idx < nums.size() - 2) {
-		if (idx > 0 && nums[idx - 1] == nums[idx]) continue;
+		if (idx > 0 && nums[idx - 1] == nums[idx])  {
+			idx++;
+			continue;
+		}
 		int l = idx + 1;
 		int r = nums.size() - 1;
 		while (l < r) {
@@ -294,7 +297,7 @@ int searchInsert(vector<int>& nums, int target) {
 			high = mid - 1;
 		}
 	}
-	if(index == -1) return start;
+	if (index == -1) return start;
 
 	return index;
 }
@@ -324,9 +327,9 @@ int main() {
 	// cout << removeElement(nums, target) << endl;
 
 	// std::vector<int> v = searchRange(nums, target);
-	cout<<searchInsert(nums, target);
+	cout << searchInsert(nums, target);
 	// for (int i : v) {
-		// cout << i << " ";
+	// cout << i << " ";
 	// }
 	// int i = 0;
 	// cout << ++i;
