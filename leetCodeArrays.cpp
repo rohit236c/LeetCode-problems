@@ -338,6 +338,34 @@ int uniquePaths(int m, int n) {
 	}
 	return dp[0][0];
 }
+int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+	int m = obstacleGrid.size() - 1 , n = obstacleGrid[0].size() - 1;
+
+	if (m == 0 && n == 0 && obstacleGrid[0][0] != 1) return 1;
+	else if (m == 0 && n == 0 && obstacleGrid[0][0] == 1) return 0;
+	//this is dp
+	vector<vector<unsigned int>>dp(m + 1, std::vector<unsigned int>(n + 1, 0));
+	int er = m, ec = n;
+	for (int i = er; i >= 0; i--) {
+		for (int j = ec; j >= 0; j--) {
+			if (i == er && j == ec && obstacleGrid[i][j] != 1) {
+				dp[i][j] = 1;
+				continue;
+			}
+			if (obstacleGrid[i][j] != 1) {
+				unsigned int count = 0;
+				if (i + 1 <= er) {
+					count += dp[i + 1][j];
+				}
+				if (j + 1 <= ec) {
+					count += dp[i][j + 1];
+				}
+				dp[i][j] = count;
+			}
+		}
+	}
+	return dp[0][0];
+}
 
 
 //------------------------------///-------------//-------------------//
@@ -350,9 +378,11 @@ void solve() {
 	};
 	int n, m;
 	cin >> m >> n;
-	cout << uniquePaths(m, n);
-	// VVI intervals(n, std::vector<int> (m, 0));
-	// input2D(intervals, n, m);
+	// cout << uniquePaths(m, n);
+	VVI intervals(m, std::vector<int> (n, 0));
+	input2D(intervals, m, n);
+	// print2D(intervals);
+	cout << uniquePathsWithObstacles(intervals);
 	// VI ans = spiralOrder(intervals);
 	// VVI ans = generateMatrix(3);
 	// print2D(ans);
