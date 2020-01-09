@@ -223,6 +223,7 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
 	}
 	return res;
 }
+//-------------------------------------------------------------------//
 vector<int> spiralOrder(vector<vector<int>>& A) {
 	int i = 0, k = 0, l = 0;
 	int m = A.size();
@@ -308,6 +309,37 @@ vector<vector<int>> generateMatrix(int n) {
 
 	return matrix;
 }
+//-------------------------------------------------------------------//
+/*
+*unique path - 1
+*unique path- II
+*/
+
+int uniquePaths(int m, int n) {
+	if (m == 0 && n == 0) return 1;
+	//this is dp
+	vector<vector<int>>dp(m, std::vector<int>(n, 0));
+	int er = m - 1, ec = n - 1;
+	for (int i = er; i >= 0; i--) {
+		for (int j = ec; j >= 0; j--) {
+			if (i == er && j == ec) {
+				dp[i][j] = 1;
+				continue;
+			}
+			int count = 0;
+			if (i + 1 <= er) {
+				count += dp[i + 1][j];
+			}
+			if (j + 1 <= ec) {
+				count += dp[i][j + 1];
+			}
+			dp[i][j] = count;
+		}
+	}
+	return dp[0][0];
+}
+
+
 //------------------------------///-------------//-------------------//
 void solve() {
 
@@ -317,12 +349,13 @@ void solve() {
 		{7, 8, 9}
 	};
 	int n, m;
-	cin >> n >> m;
-	VVI intervals(n, std::vector<int> (m, 0));
-	input2D(intervals, n, m);
+	cin >> m >> n;
+	cout << uniquePaths(m, n);
+	// VVI intervals(n, std::vector<int> (m, 0));
+	// input2D(intervals, n, m);
 	// VI ans = spiralOrder(intervals);
-	VVI ans = generateMatrix(3);
-	print2D(ans);
+	// VVI ans = generateMatrix(3);
+	// print2D(ans);
 	// VVI ans = merge(intervals);
 	// print2D(ans);
 	// printV(ans);
