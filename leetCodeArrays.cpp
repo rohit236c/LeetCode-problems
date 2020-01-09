@@ -311,8 +311,9 @@ vector<vector<int>> generateMatrix(int n) {
 }
 //-------------------------------------------------------------------//
 /*
-*unique path - 1
+*unique path - I
 *unique path- II
+*Minimum pathSum - III
 */
 
 int uniquePaths(int m, int n) {
@@ -366,6 +367,123 @@ int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
 	}
 	return dp[0][0];
 }
+int minPathSum(vector<vector<int>>& grid) {
+	int m = grid.size() - 1, n = grid[0].size() - 1;
+
+	if (m == 0 && n == 0) return grid[0][0];
+
+	vector<vector<unsigned int>>dp(m + 1, std::vector<unsigned int>(n + 1, -1));
+	int er = m, ec = n;
+	for (int i = er; i >= 0; i--) {
+		for (int j = ec; j >= 0; j--) {
+			if (i == er && j == ec) {
+				dp[i][j] = grid[i][j];
+				continue;
+			}
+			unsigned int cost = 1e6;
+			unsigned int costR = 1e6;
+			unsigned int costD = 1e6;
+			if (i + 1 <= er) {
+				costR = dp[i + 1][j];
+			}
+			if (j + 1 <= ec) {
+				costD = dp[i][j + 1];
+			}
+			dp[i][j] = min(costR, costD) + grid[i][j];
+		}
+	}
+	return dp[0][0];
+}
+//---------------------------------------------------------------------//
+void setZeroes(vector<vector<int>>& matrix) {
+	//(m+n) soln...
+
+	//O(1) soln...
+	int R = matrix.size();
+	int C = matrix[0].size();
+	bool isCol = false;
+
+	// intutiton:- use first row & column as boolean to see whether the row/column should have 0 or not.Check for first row could be seen if matrix[0][0], then set all the ele of row_one as zero and if isCol is true set matrix[i][0] = 0;
+
+	for (int i = 0; i < matrix.size(); i++) {
+
+		if (matrix[i][0] == 0) {
+			isCol = true;
+		}
+		for (int j = 1; j < matrix[0].size(); j++) {
+			if (matrix[i][j] == 0) {
+				matrix[i][0] = 0;
+				matrix[0][j] = 0;
+			}
+		}
+	}
+	// Iterate over the array once again and using the first row and first column, update the elements.
+	for (int i = 1; i < R; i++) {
+		for (int j = 1; j < C; j++) {
+			if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+				matrix[i][j] = 0;
+			}
+		}
+	}
+
+	if (matrix[0][0] == 0) {
+		for (int j = 0; j < matrix[0].size(); j++) {
+			matrix[0][j] = 0;
+		}
+	}
+	if (isCol) {
+		for (int i = 0; i < matrix.size(); ++i)
+		{
+			matrix[i][0] = 0;
+		}
+	}
+}
+
+//-------------------------------------------------------------------//
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+	if (matrix.size() == 0 || matrix[0].size() == 0) return false;
+	int n = matrix.size();
+	int m = matrix[0].size();
+	int s = n * m;
+
+	int start = 0, high = s - 1;
+	bool flag = false;
+
+	while (start <= high) {
+		int mid = (start + (high - start) / 2);
+		int r = mid / m;
+		int c = mid % m;
+		if (matrix[r][c] == target) {
+			return true;
+		}
+		else if (target > matrix[r][c]) {
+			start = mid + 1;
+		} else {
+			high = mid - 1;
+		}
+	}
+	return false;
+}
+//---------------------------------------------------------------------//
+void sortColors(vector<int>& nums) {
+	if(nums.size() == 0) return nums;
+	int itr = 0;
+	int ptr = 0;
+	int ptr1 = nums.size() - 1;
+
+	while (itr <= ptr1) {
+		if (nums[itr] == 0) {
+			swap(nums[itr], nums[ptr]);
+			ptr++;
+		}
+		else if (nums[itr] == 2) {
+			swap(nums[itr], nums[ptr1]);
+			ptr1--;
+			continue;
+		}
+		itr++;
+	}
+}
 
 
 //------------------------------///-------------//-------------------//
@@ -376,13 +494,15 @@ void solve() {
 		{4, 5, 6},
 		{7, 8, 9}
 	};
-	int n, m;
-	cin >> m >> n;
+	int n, m, target;
+	cin >> m >> n >> target;
 	// cout << uniquePaths(m, n);
 	VVI intervals(m, std::vector<int> (n, 0));
 	input2D(intervals, m, n);
 	// print2D(intervals);
-	cout << uniquePathsWithObstacles(intervals);
+	// cout << minPathSum(intervals);
+	cout << searchMatrix(intervals, target);
+	// cout << uniquePathsWithObstacles(intervals);
 	// VI ans = spiralOrder(intervals);
 	// VVI ans = generateMatrix(3);
 	// print2D(ans);
