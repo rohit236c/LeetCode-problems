@@ -21,6 +21,13 @@ void printV(VI v) {
 	}
 	cout << endl;
 }
+void printVS(std::vector<string> v) {
+	for (int i = 0; i < v.size(); ++i)
+	{
+		cout << v[i] << " ";
+	}
+	cout << endl;
+}
 
 void print2D(VVI matrix) {
 	for (auto K : matrix) {
@@ -466,7 +473,7 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
 }
 //---------------------------------------------------------------------//
 void sortColors(vector<int>& nums) {
-	if(nums.size() == 0) return nums;
+	if (nums.size() == 0) return ;
 	int itr = 0;
 	int ptr = 0;
 	int ptr1 = nums.size() - 1;
@@ -484,7 +491,29 @@ void sortColors(vector<int>& nums) {
 		itr++;
 	}
 }
+//----------------------------------------------------------------------//
+int k;
 
+void subsetsUtil(VI nums, std::vector<int> ans, int idx, VVI &res) {
+	if (idx == nums.size()) {
+		res.push_back(ans);
+		return;
+	}
+	int curN = nums[idx];
+	ans.push_back(curN);
+	subsetsUtil(nums, ans, idx + 1, res);
+	ans.pop_back();
+	subsetsUtil(nums, ans, idx + 1, res);
+}
+
+vector<vector<int>> subsets(vector<int>& nums) {
+	std::vector<std::vector<int>> res;
+	std::vector<int> ans;
+
+	subsetsUtil(nums, ans, 0, res);
+
+	return res;
+}
 
 //------------------------------///-------------//-------------------//
 void solve() {
@@ -494,14 +523,26 @@ void solve() {
 		{4, 5, 6},
 		{7, 8, 9}
 	};
-	int n, m, target;
-	cin >> m >> n >> target;
+	// int n, m, target;
+	VI nums = {1, 2, 3};
+	// VVI ans = subsets(nums);
+	std::vector<string> v;
+	VI ans;
+	// subseq("123","", v);
+	// printVS(v);
+	VVI res = subsets(nums);
+	// printV(ans);
+	print2D(res);
+	// cin >> m >> n >> target;
 	// cout << uniquePaths(m, n);
-	VVI intervals(m, std::vector<int> (n, 0));
-	input2D(intervals, m, n);
+	// VVI intervals(m, std::vector<int> (n, 0));
+	// input2D(intervals, m, n);
+	// std::vector<string> v =  printSub("abc");
+	// subset("123","");
+	// printVS(v);
 	// print2D(intervals);
 	// cout << minPathSum(intervals);
-	cout << searchMatrix(intervals, target);
+	// cout << searchMatrix(intervals, target);
 	// cout << uniquePathsWithObstacles(intervals);
 	// VI ans = spiralOrder(intervals);
 	// VVI ans = generateMatrix(3);
