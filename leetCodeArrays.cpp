@@ -492,7 +492,6 @@ void sortColors(vector<int>& nums) {
 	}
 }
 //----------------------------------------------------------------------//
-int k;
 
 void subsetsUtil(VI nums, std::vector<int> ans, int idx, VVI &res) {
 	if (idx == nums.size()) {
@@ -514,6 +513,27 @@ vector<vector<int>> subsets(vector<int>& nums) {
 
 	return res;
 }
+//------------more optimized----------------------------------//
+void subsetsUtil2(VI nums, std::vector<int> ans, int idx, VVI &res) {
+	if (idx > nums.size()) {
+		return;
+	}
+	res.push_back(ans);
+	for (int i = idx; i < nums.size(); ++i)
+	{
+		ans.push_back(nums[i]);
+		subsetsUtil2(nums, ans, i + 1, res);
+		ans.pop_back();
+	}
+}
+vector<vector<int>> subsets2(vector<int>& nums) {
+	std::vector<std::vector<int>> res;
+	std::vector<int> ans;
+
+	subsetsUtil2(nums, ans, 0, res);
+
+	return res;
+}
 
 //------------------------------///-------------//-------------------//
 void solve() {
@@ -530,7 +550,7 @@ void solve() {
 	VI ans;
 	// subseq("123","", v);
 	// printVS(v);
-	VVI res = subsets(nums);
+	VVI res = subsets2(nums);
 	// printV(ans);
 	print2D(res);
 	// cin >> m >> n >> target;
