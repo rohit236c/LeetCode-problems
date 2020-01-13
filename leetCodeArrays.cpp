@@ -534,25 +534,62 @@ vector<vector<int>> subsets2(vector<int>& nums) {
 
 	return res;
 }
+//--------------------------------------------------------------------//
+bool dfs(vector<vector<char>>& board, vector<vector<bool>>& used, string word, int cur, int row, int col) {
+	if (!used[row][col] and board[row][col] == word[cur]) {
+
+		used[row][col] = true;
+		if (cur == word.size() - 1)
+			return true;
+		if (row > 0 and dfs(board, used, word, cur + 1, row - 1, col)) {
+			return true;
+		}
+		if (row < board.size() - 1 and dfs(board, used, word, cur + 1, row + 1, col)) {
+			return true;
+		}
+		if (col > 0 and dfs(board, used, word, cur + 1, row, col - 1)) {
+			return true;
+		}
+		if (col < board[0].size() - 1 and dfs(board, used, word, cur + 1, row, col + 1)) {
+			return true;
+		}
+		used[row][col] = false;
+	}
+	return false;
+}
+
+bool exist(vector<vector<char>>& board, string word) {
+	int row = board.size();
+	int col = board[0].size();
+	vector<vector<bool>> used(row, vector<bool>(col, false));
+	for (int i = 0; i < board.size(); i++) {
+		for (int j = 0; j < board[0].size(); j++) {
+			if (board[i][j] == word[0]) {
+				if (dfs(board, used, word, 0, i, j))
+					return true;
+			}
+		}
+	}
+	return false;
+}
 
 //------------------------------///-------------//-------------------//
+
 void solve() {
 
-	VVI matrix = {
-		{1, 2, 3},
-		{4, 5, 6},
-		{7, 8, 9}
-	};
+
+
 	// int n, m, target;
-	VI nums = {1, 2, 3};
+	// VI nums = {1, 2, 3};
 	// VVI ans = subsets(nums);
-	std::vector<string> v;
-	VI ans;
+	// std::vector<string> v;
+	// VI ans;
 	// subseq("123","", v);
 	// printVS(v);
-	VVI res = subsets2(nums);
+	// VVI res = subsets2(nums);
+	// cout << exist(board, "ABCD");
 	// printV(ans);
-	print2D(res);
+	// print2D(res);
 	// cin >> m >> n >> target;
 	// cout << uniquePaths(m, n);
 	// VVI intervals(m, std::vector<int> (n, 0));
