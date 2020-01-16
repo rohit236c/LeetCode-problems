@@ -678,6 +678,53 @@ int minDistance(string word1, string word2) {
 	}
 	return dp[word1.size()][word2.size()];
 }
+///---------------------------------------------------------------------///
+int LIS(std::vector<int> &num) {
+	if (num.size() <= 0) return 0;
+	VI dp(num.size(), 1);
+	int maxVal = 1;
+	for (int i = 1; i < num.size(); i++) {
+		for (int j = i - 1; j >= 0; j--) {
+			if (num[j] < num[i] && dp[j] + 1 > dp[i]) {
+				dp[i] = dp[j] + 1;
+			}
+		}
+		maxVal = max(maxVal, dp[i]);
+	}
+	printV(dp);
+	return maxVal;
+}
+int LIS_II(std::vector<int> &num) {
+	if (num.size() <= 0) return 0;
+	VI dp(num.size(), 1);
+	int maxVal = 1;
+	for (int i = 1; i < num.size(); i++) {
+		for (int j = i - 1; j >= 0; j--) {
+			if (num[j] < num[i] && dp[j] + 1 > dp[i]) {
+				dp[i] = dp[j] + 1;
+			}
+		}
+		maxVal = max(maxVal, dp[i]);
+	}
+	printV(dp);
+	return maxVal;
+}
+//-----------------------------------------------------------------------//
+bool isSubsequence(string s, string t) {
+	if (s.length() > t.length())
+		return false;
+	if (s.empty() || t.empty())
+		return true;
+	int sIndex = 0;
+	for (int i = 0; i < t.size(); ++i)
+	{
+		if(sIndex == s.size()) {
+			return true;
+		}
+		if(s[sIndex] == t[i]) sIndex++;
+	}
+	return false;
+}
 
 void solve() {
 
@@ -686,8 +733,9 @@ void solve() {
 	// cin >> str;
 	// cout << longestPalindromicSubstring(str);
 	int n = 2;
+	cout<<isSubsequence("B","C");
 	// cout << climbStairs(4);
-	cout << minDistance("intention", "execution");
+	// cout << minDistance("intention", "execution");
 	// int n, m, target;
 	// VI nums = {1, 2, 3};
 	// VVI ans = subsets(nums);
