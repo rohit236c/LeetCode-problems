@@ -64,6 +64,23 @@ void targetQues(VI &nums, int n) {
 		cin >> nums[i];
 	}
 }
+//---------------------------jump to last position---------------------------//
+int jumpII(vector<int>& nums) {
+	int n = nums.size();
+	vector<int>dp(n, 1e6);
+	dp[n - 1] = 0;
+	for (int i = n - 2; i >= 0; i--) {
+
+		int toGo = nums[i];
+		int ans = (int)1e6;
+		for (int j = 1; j <= toGo && i + j < n; j++) {
+			ans = min(dp[i + j], ans);
+		}
+		dp[i] = 1 + ans;
+	}
+	printV(dp);
+	return dp[0];
+}
 //-----------------------longest Palindromic substring--------------------//
 VVB lpsDp(string str) {
 	VVB dp(str.size(), std::vector<bool> (str.size(), false));
@@ -176,19 +193,37 @@ int LIS(std::vector<int> &num) {
 	return maxVal;
 }
 int LIS_II(std::vector<int> &num) {
+	int n = num.size();
 	if (num.size() <= 0) return 0;
-	VI dp(num.size(), 1);
+	VI LIS;
+	LIS.push_back(num[0]);
 	int maxVal = 1;
-	for (int i = 1; i < num.size(); i++) {
-		for (int j = i - 1; j >= 0; j--) {
-			if (num[j] < num[i] && dp[j] + 1 > dp[i]) {
-				dp[i] = dp[j] + 1;
+	int len = 1;
+	for (int i = 1; i < n; ++i)
+	{
+		int low = 0;
+		int high = len - 1;
+		
+		if (num[i] > LIS[high]) {
+			LIS.push_back(num[i]);
+			len++;
+			continue;
+		}
+		//find the exact position of the element......
+		while (low < high) {
+			int mid = (low + high) / 2;
+			if (LIS[mid] < num[i]) {
+				low = mid + 1;
+			} else {
+				high = mid;
 			}
 		}
-		maxVal = max(maxVal, dp[i]);
+		LIS[high] = num[i];
+		// parent[i] = LIS[low - 1];
+
 	}
-	printV(dp);
-	return maxVal;
+	// printV(LIS);
+	return LIS.size();
 }
 //---------------------Is a pattern subsequence of the string---------------------------------------//
 bool isSubsequence(string s, string t) {
@@ -199,16 +234,17 @@ bool isSubsequence(string s, string t) {
 	int sIndex = 0;
 	for (int i = 0; i < t.size(); ++i)
 	{
-		if(sIndex == s.size()) {
+		if (sIndex == s.size()) {
 			return true;
 		}
-		if(s[sIndex] == t[i]) sIndex++;
+		if (s[sIndex] == t[i]) sIndex++;
 	}
 	return false;
 }
 
 void solve() {
-
+	VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+	cout << LIS_II(nums);
 }
 int main() {
 	solve();
