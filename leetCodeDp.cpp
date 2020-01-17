@@ -25,6 +25,16 @@ void PrintM(std::vector<T> v) {
 	}
 	cout << endl;
 }
+template<typename T>
+void Print2DT(std::vector<T> v) {
+	for (auto K : v) {
+		for (auto i : K) {
+			cout << i << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
 void printV(VI v) {
 	for (int i = 0; i < v.size(); ++i)
 	{
@@ -57,6 +67,16 @@ void input2D(VVI &intervals, int n, int m) {
 		}
 	}
 }
+void input2DChar(std::vector<std::vector<char>> &intervals, int n, int m) {
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			cin >> intervals[i][j];
+		}
+	}
+}
+
 void targetQues(VI &nums, int n) {
 	int target;
 	cin >> target;
@@ -203,7 +223,7 @@ int LIS_II(std::vector<int> &num) {
 	{
 		int low = 0;
 		int high = len - 1;
-		
+
 		if (num[i] > LIS[high]) {
 			LIS.push_back(num[i]);
 			len++;
@@ -241,10 +261,197 @@ bool isSubsequence(string s, string t) {
 	}
 	return false;
 }
+//----------------------------------Gold Mine------------------------------------------------//
+const int directions[] = {0, 1, 0, -1, 0};
+int getMaximumGoldUtil(VVI grid, int idx, int jidx) {
+	if (idx < 0 || jidx < 0 || idx >= grid.size() || jidx >= grid[0].size() || grid[idx][jidx] == 0) return 0;
+	int maxGold = 0;
+	int val = grid[idx][jidx];
+	grid[idx][jidx] = 0;
+	for (int i = 0; i < 4; i++) {
+		maxGold = max(maxGold, getMaximumGoldUtil(grid, directions[i] + idx, directions[i + 1] + jidx));
+	}
+	grid[idx][jidx] = val;
+
+	return val + maxGold;
+
+}
+
+int getMaximumGold(vector<vector<int>>& grid) {
+	int m = grid.size();
+	int n = grid[0].size();
+	int maxVal = -1e8;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (grid[i][j] > 0)
+				maxVal = max(maxVal, getMaximumGoldUtil(grid, i, j));
+		}
+	}
+	return maxVal;
+}
+class Rectangle {
+public:
+	int squareVal;
+	int horizRect;
+	int verticalRect;
+	Rectangle(int s, int h, int v) {
+		squareVal = s;
+		horizRect = h;
+		verticalRect = v;
+	}
+	Rectangle() {
+
+	}
+};
+int maximalRectangle(vector<vector<char>>& matrix) {
+	int n = matrix.size(), m = matrix[0].size();
+	Rectangle r = Rectangle(0, 0, 0);
+	std::vector<std::vector<Rectangle>> dp(matrix.size(), std::vector<Rectangle> (matrix[0].size(), r));
+
+	//------------dp is initialised here-----------------------\\
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (matrix[i][j] == '0') {
+				Rectangle r = Rectangle(0, 0, 0);
+				dp[i][j] = r;
+			} else {
+				Rectangle r = Rectangle(1, 1, 1);
+				dp[i][j] = r;
+			}
+		}
+	}
+	//-------------main calls---------------------------------\\
+
+	int maxiRectangle = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (matrix[i][j] == '0') {
+				Rectangle r = Rectangle(0, 0, 0);
+				dp[i][j] = r;
+			} else {
+				// check for square length---
+				int upVal = 0;
+				int leftVal = 0;
+				int diag = 0;
+				if (i - 1 >= 0) {
+					upVal = dp[i - 1][j].squareVal;
+				}
+				if (j - 1 >= 0) {
+					leftVal = dp[i][j - 1].squareVal;
+				}
+				if (i - 1 >= 0 && j - 1 >= 0) {
+					diag = dp[i - 1][j - 1].squareVal;
+				}
+				int sqVal = min(upVal, min(leftVal, diag)) + 1;
+				//--------------------------------------------//
+				int horizRect = 1;
+				int verticalRect = 1;
+				// rectangle Val
+				if (i - 1 >= 0) {
+					verticalRect = dp[i - 1][j].verticalRect + 1;
+				}
+				if (j - 1 >= 0) {
+					horizRect = dp[i][j - 1].horizRect + 1;
+				}
+				Rectangle r = Rectangle(sqVal, horizRect, verticalRect);
+				dp[i][j] = r;
+				int val = max(sqVal, max(horizRect, verticalRect));
+				maxiRectangle = max(maxiRectangle, val);
+			}
+		}
+	}
+
+	// for (auto K : dp) {
+	// 	for (auto i : K) {
+	// 		cout << i.squareVal << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	// cout<<endl;
+	for (auto K : dp) {
+		for (auto i : K) {
+			cout << i.verticalRect << " ";
+		}
+		cout << endl;
+	}
+
+	return maxiRectangle;
+
+}
+unsigned int maximalSquare(vector<vector<char>>& matrix) {
+	if (matrix.size() == 0) return 0;
+	int n = matrix.size(), m = matrix[0].size();
+
+	if (n == 0 && m == 0) return 0;
+	if (n == 1 && m == 1 && matrix[0][0] == '1') return 1;
+	else if (n == 1 && m == 1 && matrix[0][0] == '0') return 0;
+
+
+	std::vector<std::vector<int>> dp(matrix.size(), std::vector<int> (matrix[0].size(), 0));
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (matrix[i][j] == '0') {
+				dp[i][j] = 0;
+			} else {
+				dp[i][j] = 1;
+			}
+		}
+	}
+	unsigned int maximalSquare_ = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (matrix[i][j] != '0') {
+				int upVal = 0;
+				int leftVal = 0;
+				int diag = 0;
+				if (i - 1 >= 0) {
+					upVal = dp[i - 1][j];
+				}
+				if (j - 1 >= 0) {
+					leftVal = dp[i][j - 1];
+				}
+				if (i - 1 >= 0 && j - 1 >= 0) {
+					diag = dp[i - 1][j - 1];
+				}
+				unsigned int sqVal = min(upVal, min(leftVal, diag)) + 1;
+				dp[i][j] = sqVal;
+				maximalSquare_  = max(maximalSquare_, sqVal);
+			}
+		}
+	}
+
+	return (maximalSquare_ * maximalSquare_);
+
+}
+
+
+//----------------------------------coin Change---------------------------------------------//
 
 void solve() {
-	VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
-	cout << LIS_II(nums);
+	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+	int m = 4, n = 5;
+	// char ch = '5';
+	// char ch2 = '1';
+	// cout<<((ch + ch2) - 'a' + 1);
+
+	std::vector<std::vector<char>> grid(m, std::vector<char>(n));
+	input2DChar(grid, 4, 5);
+	// cout << getMaximumGold(grid);
+	// print2D(grid);
+	// cout << maximalRectangle(grid);
+	cout << maximalSquare(grid);
+	cout << endl;
+	Print2DT<std::vector<char>>(grid);
+	// cout << LIS_II(nums);
 }
 int main() {
 	solve();
