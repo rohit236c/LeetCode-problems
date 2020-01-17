@@ -452,22 +452,49 @@ int coinChangePermu(std::vector<int> coins, int target) {
 	}
 	return dp[target];
 }
-int coinChangeCombi(std::vector<int> coins, int target) {
+int coinChange(std::vector<int> coins, int target) {
+	if (target == 0) return 0;
 	if (coins.size() == 0) return 0;
 
-	if (target == 0) return 1;
 
-	std::vector<int> dp(target + 1, 0);
-	dp[0] = 1;
+	std::vector<int> toReach(target + 1, INT_MAX / 2);
+	toReach[0] = 0;
+
 	for (int i = 0; i < coins.size(); ++i) {
+		int val = INT_MAX / 2;
 		for (int t = 1; t <= target; t++) {
 			if (t - coins[i] >= 0) {
-				dp[t] += dp[t - coins[i]];
+				val = (1 + toReach[t - coins[i]]);
 			}
+
+			toReach[t] = min(toReach[t], val);
+
 		}
 	}
-	printV(dp);
-	return dp[target];
+	if (toReach[target] == INT_MAX / 2) return -1;
+	return toReach[target];
+}
+int cnt = 0;
+int recursionCoinChangeCombi(std::vector<int> coins, int target, int &minCoin, int idx) {
+
+	if (target == 0) {
+		return 1;
+	}
+
+	int ans = 0;
+	for (int i = idx; i < coins.size(); i++) {
+		if (target - coins[i] >= 0) {
+			cnt++;
+			if (target - coins[i] == 0) {
+				cout << cnt << " @ " << coins[i] << endl;
+				minCoin = min(minCoin, cnt);
+			}
+
+			ans += recursionCoinChangeCombi(coins, target - coins[i], minCoin, i);
+			cnt--;
+		}
+	}
+	return ans;
 }
 
 
@@ -486,9 +513,13 @@ void solve() {
 	// cout << maximalSquare(grid);
 	// cout << endl;
 	// Print2DT<std::vector<char>>(grid);
-	VI coins = {3};
-	int target = 2;
-	cout << coinChangeCombi(coins, 10);
+	VI coins = {1,2,5};
+	int target = 1;
+	// cout << coinChangeCombi(coins, 10);
+	int minCoin = 1e7;
+	// cout << recursionCoinChangeCombi(coins, 11, minCoin, 0) << endl;
+	cout << coinChange(coins, 11);
+	// cout << minCoin;
 	// cout << LIS_II(nums);
 }
 int main() {
