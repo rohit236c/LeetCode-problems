@@ -435,6 +435,41 @@ unsigned int maximalSquare(vector<vector<char>>& matrix) {
 
 
 //----------------------------------coin Change---------------------------------------------//
+int coinChangePermu(std::vector<int> coins, int target) {
+	if (coins.size() == 0) return 0;
+
+	if (target == 0) return 1;
+
+	std::vector<int> dp(target + 1, 0);
+	dp[0] = 1;
+	for (int t = 1; t <= target; t++) {
+		for (int i = 0; i < coins.size(); ++i)
+		{
+			if (t - coins[i] >= 0) {
+				dp[t] += dp[t - coins[i]];
+			}
+		}
+	}
+	return dp[target];
+}
+int coinChangeCombi(std::vector<int> coins, int target) {
+	if (coins.size() == 0) return 0;
+
+	if (target == 0) return 1;
+
+	std::vector<int> dp(target + 1, 0);
+	dp[0] = 1;
+	for (int i = 0; i < coins.size(); ++i) {
+		for (int t = 1; t <= target; t++) {
+			if (t - coins[i] >= 0) {
+				dp[t] += dp[t - coins[i]];
+			}
+		}
+	}
+	printV(dp);
+	return dp[target];
+}
+
 
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
@@ -443,14 +478,17 @@ void solve() {
 	// char ch2 = '1';
 	// cout<<((ch + ch2) - 'a' + 1);
 
-	std::vector<std::vector<char>> grid(m, std::vector<char>(n));
-	input2DChar(grid, 4, 5);
-	// cout << getMaximumGold(grid);
-	// print2D(grid);
-	// cout << maximalRectangle(grid);
-	cout << maximalSquare(grid);
-	cout << endl;
-	Print2DT<std::vector<char>>(grid);
+	// std::vector<std::vector<char>> grid(m, std::vector<char>(n));
+	// input2DChar(grid, 4, 5);
+	// // cout << getMaximumGold(grid);
+	// // print2D(grid);
+	// // cout << maximalRectangle(grid);
+	// cout << maximalSquare(grid);
+	// cout << endl;
+	// Print2DT<std::vector<char>>(grid);
+	VI coins = {3};
+	int target = 2;
+	cout << coinChangeCombi(coins, 10);
 	// cout << LIS_II(nums);
 }
 int main() {
