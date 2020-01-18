@@ -718,12 +718,68 @@ bool isSubsequence(string s, string t) {
 	int sIndex = 0;
 	for (int i = 0; i < t.size(); ++i)
 	{
-		if(sIndex == s.size()) {
+		if (sIndex == s.size()) {
 			return true;
 		}
-		if(s[sIndex] == t[i]) sIndex++;
+		if (s[sIndex] == t[i]) sIndex++;
 	}
 	return false;
+}
+//-------------------------------------------------------------------------//
+int longestPalindrome(string s) {
+	if (s.size() == 0) return 0;
+	int n = s.size();
+	std::vector<int> freq(100, 0);
+	for (char c : s) {
+		freq[c - 'A']++;
+	}
+	//--take all even length
+	int even = 0, odd = 0, palindromeSize = 1;
+	//odd length..
+	int fUn = 0, kl = 0;
+	for (int i : freq) {
+		if (i % 2 == 0) {
+			even += i;
+			continue;
+		}
+		if (i % 2 != 0 && i == 1 && fUn == 0 && kl == 0) {
+			odd += i;
+			fUn = 1;
+		} else if (i % 2 != 0 && i > 1 && kl == 0 && fUn == 0) {
+			odd += i;
+			kl = 1;
+		}
+		else if (i % 2 != 0 && i > 1) {
+			i = i - 1;
+			odd += i;
+		}
+	}
+	palindromeSize = even + odd;
+	return palindromeSize;
+
+}
+int numDecodings(string s) {
+	if (s.size() == 0) return 0;
+	if(s[0] == '0') return 0;
+	std::vector<int> dp(s.size() + 1, 0);
+	int n = s.size();
+	dp[n] = 1;
+	for (int i = n - 1; i >= 0; i--) {
+		if(s[i] == '0') {
+			dp[i] = 0;
+			continue;
+		}
+		string num = "";
+		num += s[i];
+		num += s[i + 1];
+		if (num >= "10" && num <= "26" && i + 2 <= n) {
+			//two-digit h...
+			dp[i] = dp[i + 1] + dp[i + 2];
+		} else {
+			dp[i] = dp[i + 1];
+		}
+	}
+	return dp[0];
 }
 
 void solve() {
@@ -733,7 +789,9 @@ void solve() {
 	// cin >> str;
 	// cout << longestPalindromicSubstring(str);
 	int n = 2;
-	cout<<isSubsequence("B","C");
+	// cout << isSubsequence("B", "C");
+	// cout << longestPalindrome("bananas");
+	cout << numDecodings("100");
 	// cout << climbStairs(4);
 	// cout << minDistance("intention", "execution");
 	// int n, m, target;
