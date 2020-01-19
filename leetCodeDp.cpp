@@ -496,11 +496,90 @@ int recursionCoinChangeCombi(std::vector<int> coins, int target, int &minCoin, i
 	}
 	return ans;
 }
+//-------------------------------Russian Doll------------------------------//
+
+bool compare(VI p1, VI p2) {
+	if (p1[0] == p2[0]) return p1[1] > p2[1];
+
+	return p1[0] < p2[0];
+}
+
+int maxEnvelopes(vector<vector<int>>& envelopes) {
+	if (envelopes.size() == 0) return 0;
+	sort(envelopes.begin(), envelopes.end(), compare);
+
+	VI LIS;
+	// LIS[0] = 1;
+
+	LIS.push_back(envelopes[0][1]);
+	int len = 1, max_ = 1;
+	for (int i = 1; i < envelopes.size(); i++) {
+		if (LIS.back() < envelopes[i][1]) {
+			LIS.push_back(envelopes[i][1]);
+			len++;
+		}
+		else {
+			int num = envelopes[i][1];
+			int low = 0;
+			int high = len - 1;
+
+			//find the exact position of the element......
+			while (low < high) {
+				int mid = (low + high) / 2;
+				if (LIS[mid] < num) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
+			LIS[high] = num;
+		}
+	}
+	return len;
+}
+//----russian doll-- using inbuilt BS------------------------------//
+int maxEnvelopes(vector<pair<int, int>>& envelopes)
+{
+	int size = envelopes.size();
+	sort(envelopes.begin(), envelopes.end(), [](pair<int, int> a, pair<int, int>b) {
+		return a.first < b.first || (a.first == b.first && a.second > b.second);
+	});
+	vector<int> collector;
+	for (auto& pair : envelopes)
+	{
+		auto iter = lower_bound(collector.begin(), collector.end(), pair.second);
+		if (iter == collector.end()) collector.push_back(pair.second);
+		else if (*iter > pair.second) *iter = pair.second;
+	}
+	return collector.size();
+}
 
 
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
 	int m = 4, n = 5;
+	VVI v;
+	for (int i = 0; i < m; i++) {
+		int p, k;
+		cin >> p >> k;
+		VI p1(2);
+		p1[0] = p;
+		p1[1] = k;
+		v.push_back(p1);
+	}
+	cout << maxEnvelopes(v);
+	//-------------------------------//
+	// VII k;
+	// for (int i = 0; i < m; i++) {
+	// 	int p, k;
+	// 	cin >> p >> k;
+	// 	VI p1(2);
+	// 	p1[0] = p;
+	// 	p1[1] = k;
+	// 	v.push_back(p1);
+	// }
+	// cout<< maxEnvelopes(v);
+
 	// char ch = '5';
 	// char ch2 = '1';
 	// cout<<((ch + ch2) - 'a' + 1);
@@ -513,12 +592,12 @@ void solve() {
 	// cout << maximalSquare(grid);
 	// cout << endl;
 	// Print2DT<std::vector<char>>(grid);
-	VI coins = {1,2,5};
-	int target = 1;
-	// cout << coinChangeCombi(coins, 10);
-	int minCoin = 1e7;
-	// cout << recursionCoinChangeCombi(coins, 11, minCoin, 0) << endl;
-	cout << coinChange(coins, 11);
+	// VI coins = {1, 2, 5};
+	// int target = 1;
+	// // cout << coinChangeCombi(coins, 10);
+	// int minCoin = 1e7;
+	// // cout << recursionCoinChangeCombi(coins, 11, minCoin, 0) << endl;
+	// cout << coinChange(coins, 11);
 	// cout << minCoin;
 	// cout << LIS_II(nums);
 }
