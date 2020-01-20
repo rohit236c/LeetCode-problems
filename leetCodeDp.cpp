@@ -553,21 +553,125 @@ int maxEnvelopes(vector<pair<int, int>>& envelopes)
 	}
 	return collector.size();
 }
+//---------------find--Target--Sum--Ways-------------------------------//
+int findTargetSumWays(VI nums, int  S, int idx, int c) {
+	if (idx == nums.size()) {
+		if (S == 0) {
+			return 1;
+		}
+		return 0;
+	}
+	int cnt = 0;
 
+	cnt += findTargetSumWays(nums, S + nums[idx], idx + 1, 0);
+	cnt += findTargetSumWays(nums, S - nums[idx], idx + 1, 0);
+
+	return cnt;
+}
+int findTargetSumWays(vector<int>& nums, int S) {
+	return findTargetSumWays(nums, S, 0, 0);
+}
+
+//--------------find--Target--Sum--Ways-DP---------------------------//
+int findTargetSumWaysII(std::vector<int> nums, int S, int idx) {
+	int posSum = 0, negativeSum = 0;
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		posSum += nums[i];
+		negativeSum -= nums[i];
+	}
+	std::vector<int> dp(posSum * 2, 0);
+	dp[posSum * 2] = 1;
+	dp[0] = 1;
+	for (int i = 0; i < nums.size(); i++) {
+
+	}
+}
+int findTargetSumWaysII(vector<int>& nums, int S) {
+	return findTargetSumWaysII(nums, S, 0);
+}
+
+//-----------------------------num-decodings-hard----------------------//
+int M = 1000000007;
+int numDecodings(string s) {
+	string a;
+	cin >> a;
+	s += a;
+	if (s.size() == 0) return 0;
+	int n = s.size();
+	std::vector<int> dp(s.size() + 1, 0);
+	dp[n] = 1;
+
+	for (int i = n - 1; i >= 0; i--)
+	{	string num = "";
+		if (s[i] == '0') {
+			dp[i] = 0;
+			continue;
+		}
+		if (s[i] == '*') {
+			dp[i] = (dp[i + 1] * 9) % M;
+			num += s[i];
+			num += s[i + 1];
+			if ( i + 1 < n && s[i + 1] == '*' ) {
+				int ans = (dp[i + 2] * 15) % M;
+				dp[i] = dp[i] + ans;
+				continue;
+			}
+			if (s[i + 1] <= '6' && s[i + 1] >= '1') {
+				dp[i] += (dp[i + 2] * 2) % M;
+			} else if (s[i + 1] >= '7' && s[i + 1] <= '9') {
+				dp[i] += (dp[i + 2] * 1) % M;
+			} else if (s[i + 1] == '0') {
+				dp[i] += (dp[i + 2] * 2) % M;
+			}
+		} else {
+			string num = "";
+			num += s[i];
+			num += s[i + 1];
+			if (s[i + 1] != '*') {
+				if (num >= "10" && num <= "26" && i + 2 <= n) {
+					//two-digit h...
+					dp[i] = (dp[i + 1] + dp[i + 2]) % M;
+				} else {
+					dp[i] = dp[i + 1] % M;
+				}
+			} else {
+				dp[i] = dp[i + 1] % M;
+				if (s[i] == '1') {
+					if (s[i + 1] == '*') {
+						dp[i] =  (dp[i] + (9 * dp[i + 2])) % M;
+					}
+				}
+				else if (s[i] == '2') {
+					if (s[i + 1] == '*') {
+						dp[i] =  (dp[i] + (6 * dp[i + 2])) % M;
+					}
+				}
+			}
+		}
+	}
+	printV(dp);
+	return dp[0];
+
+}
 
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
-	int m = 4, n = 5;
-	VVI v;
-	for (int i = 0; i < m; i++) {
-		int p, k;
-		cin >> p >> k;
-		VI p1(2);
-		p1[0] = p;
-		p1[1] = k;
-		v.push_back(p1);
-	}
-	cout << maxEnvelopes(v);
+	// int m = 4, n = 5;
+	// VVI v;
+	// for (int i = 0; i < m; i++) {
+	// 	int p, k;
+	// 	cin >> p >> k;
+	// 	VI p1(2);
+	// 	p1[0] = p;
+	// 	p1[1] = k;
+	// 	v.push_back(p1);
+	// }
+	// cout << maxEnvelopes(v);
+	VI nums = {1, 1, 1, 1, 1};
+	int target = 3;
+	// cout << findTargetSumWays(nums, 3);
+	cout << numDecodings("");
 	//-------------------------------//
 	// VII k;
 	// for (int i = 0; i < m; i++) {
