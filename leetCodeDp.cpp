@@ -654,7 +654,37 @@ int numDecodings(string s) {
 	return dp[0];
 
 }
+int burstBalloons(VI &nums) {
+	int max_ = INT_MIN;
 
+
+	return max_;
+}
+bool divisorGame(int N) {
+	if (N == 0) return true;
+	if (N == 1) return false;
+	vector<bool>dp(N + 1);
+	dp[0] = true;
+	dp[1] = false;
+	dp[2] = true;
+	
+	for (int i = 3; i <= N; i++) {
+		bool ans = dp[1];
+		for (int j = 1; j < i; j++) {
+			if (i % j == 0) {
+				if(i == 5)
+
+				ans = ans | dp[j];
+			}
+		}
+		dp[i] = ans;
+	}
+	PrintM<bool>(dp);
+	return dp[N];
+}
+void easySet() {
+	cout << divisorGame(5);
+}
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
 	// int m = 4, n = 5;
@@ -706,5 +736,6 @@ void solve() {
 	// cout << LIS_II(nums);
 }
 int main() {
-	solve();
+	// solve();
+	easySet();
 }
