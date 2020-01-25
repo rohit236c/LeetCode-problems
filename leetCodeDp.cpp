@@ -680,9 +680,37 @@ bool divisorGame(int N) {
 	PrintM<bool>(dp);
 	return dp[N];
 }
+int maxProfit(vector<int>& prices) {
+
+}
+class NumArray {
+	vector<int>prefix;
+public:
+	NumArray(vector<int>& nums) {
+		prefix.resize(nums.size() + 1);
+		prefix[0] = nums[0];
+		for (int i = 1; i < nums.size(); ++i)
+		{
+			prefix[i] = prefix[i - 1] + nums[i];
+		}
+	}
+
+	int sumRange(int i, int j) {
+		// find 0, j then...
+		if (i == 0) return prefix[j];
+		else {
+			int ans = prefix[j] - prefix[i - 1];
+			return ans;
+		}
+	}
+};
+
 void easySet() {
 	// cout << divisorGame(5);
-	
+	VI nums{ -2, 0, 3, -5, 2, -1};
+	NumArray* obj = new NumArray(nums);
+	cout<< obj->sumRange(3, 5);
+
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
