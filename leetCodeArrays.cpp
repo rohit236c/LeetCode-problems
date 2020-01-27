@@ -760,12 +760,12 @@ int longestPalindrome(string s) {
 }
 int numDecodings(string s) {
 	if (s.size() == 0) return 0;
-	if(s[0] == '0') return 0;
+	if (s[0] == '0') return 0;
 	std::vector<int> dp(s.size() + 1, 0);
 	int n = s.size();
 	dp[n] = 1;
 	for (int i = n - 1; i >= 0; i--) {
-		if(s[i] == '0') {
+		if (s[i] == '0') {
 			dp[i] = 0;
 			continue;
 		}
@@ -781,6 +781,43 @@ int numDecodings(string s) {
 	}
 	return dp[0];
 }
+int mySqrt(int x) {
+	int n = x;
+	int low = 0;
+	int high = x - 1;
+	while (low <= high) {
+		int m = (low + high) / 2;
+		if (m * m == x) return m;
+		if (m * m < x) {
+			low = m + 1;
+		} else {
+			high = m - 1;
+		}
+	}
+	return high;
+
+}
+vector<int> twoSum(vector<int>& numbers, int target) {
+	vector<int> ans;
+	for (int i = 0; i < numbers.size(); ++i)
+	{
+		int find = target - numbers[i];
+		int in1 = i + 1, in2 = -1;
+		if (binary_search(numbers.begin() + i + 1, numbers.end(), find)) {
+			in2 = lower_bound(numbers.begin() + i + 1, numbers.end(), find) - numbers.begin() + 1;
+			ans.push_back(in1);
+			ans.push_back(in2);
+			return ans;
+		} 	
+	}
+	return ans;
+}
+void bstTEST() {
+	VI nums{2,7,11,15};
+	VI ans = twoSum(nums, 9);
+	printV(ans);
+
+}
 
 void solve() {
 
@@ -791,7 +828,9 @@ void solve() {
 	int n = 2;
 	// cout << isSubsequence("B", "C");
 	// cout << longestPalindrome("bananas");
-	cout << numDecodings("100");
+	// cout << numDecodings("100");
+	// cout << mySqrt(1);
+	bstTEST();
 	// cout << climbStairs(4);
 	// cout << minDistance("intention", "execution");
 	// int n, m, target;

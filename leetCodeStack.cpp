@@ -114,7 +114,7 @@ bool isValid(string s) {
 }
 ///-----------------------------------------------------------------------------///
 string removeOuterParentheses(string S) {
-	return "a";
+	
 }
 void solve() {
 	string ans = removeOuterParentheses("");
