@@ -788,12 +788,25 @@ void easySet() {
 
 
 }
+vector<int> countBits(int num) {
+	VI dp(num + 1, 0);
+	if (num == 0) return dp;
+
+	dp[0] = 0;
+	dp[1] = 1;
+	for (int i = 2; i <= num; i++) {
+            dp[i] = (i&1) + dp[i/2];
+    }
+	return dp;
+}	
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
 	// cout << minimumTotal(nums);
-	VI num{2, 7, 9, 3, 1};
-	cout << rob(num);
+	// VI num{2, 7, 9, 3, 1};
+	// cout << rob(num) << endl;
+	VI ans = countBits(5);
+	printV(ans);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
