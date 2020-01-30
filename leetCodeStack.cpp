@@ -113,8 +113,35 @@ bool isValid(string s) {
 	return st.empty() ;
 }
 ///-----------------------------------------------------------------------------///
-string removeOuterParentheses(string S) {
-	
+int histogram(VI arr) {
+	int n = arr.size();
+	if (n == 0) return 0;
+	if (n == 1) return arr[0];
+	stack <int> s ;
+	int area = 0;
+	int maxArea = 0;
+	int i = 0;
+	int top;
+	while (i < n)
+	{
+		if (s.empty() || arr[s.top()] <= arr[i]) {
+			s.push(i++);
+		}
+		else {
+			top = s.top();
+			s.pop();
+			area = arr[top] * (s.empty() ? i : i - s.top() - 1);
+			maxArea = max(maxArea, area);
+		}
+	}
+	// cout<<s.size() <<endl;
+	while (!s.empty()) {
+		top = s.top();
+		s.pop();
+		area = arr[top] * (s.empty() ? i : i - s.top() - 1);
+		maxArea = max(maxArea, area);
+	}
+	return maxArea;
 }
 void solve() {
 	string ans = removeOuterParentheses("");
