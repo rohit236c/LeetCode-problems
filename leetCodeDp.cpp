@@ -705,12 +705,95 @@ public:
 	}
 };
 
+int maxProduct(vector<int>& nums) {
+	if (nums.size() == 0) return 0;
+
+	int maxProduct = nums[0], minProduct = nums[0];
+	int prevMax = nums[0], prevMin = nums[0];
+	int ans = INT_MIN;
+	ans = nums[0];
+
+	for (int i = 1; i < nums.size(); i++) {
+
+		maxProduct = max(maxProduct, max(prevMax * nums[i], prevMin * nums[i]));
+		minProduct = min(minProduct, min(prevMax * nums[i], prevMin * nums[i]));
+		ans = max(ans, maxProduct);
+		prevMax = maxProduct;
+		prevMin = minProduct;
+
+	}
+	return ans;
+}
+//----------------------------Triangle---------------------------------------------------------------//
+int minimumTotal(vector<vector<int>>& triangle) {
+	int row = triangle.size();
+	if (row == 0) return 0;
+	int col = triangle[row - 1].size();
+	VVI dp(triangle.size(), VI(col, 0));
+
+	for (int i = row - 1; i >= 0; i--) {
+		int colSize = triangle[i].size();
+		for (int j = colSize - 1; j >= 0; j--) {
+			if (i == row - 1) {
+				dp[i][j] = triangle[i][j];
+			} else {
+				dp[i][j] = min(dp[i + 1][j], dp[i + 1][j + 1]) + triangle[i][j];
+			}
+		}
+	}
+	// print2D(dp);
+	return dp[0][0];
+
+}
+int rob(vector<int>& nums) {
+	int n = nums.size();
+	if (n == 0) return 0;
+	if (n == 1) return nums[0];
+
+	VI dp(n , 0);
+	VI dp2(n, 0);
+	if (n == 2) return max(nums[0], nums[1]);
+	int ans = INT_MIN;
+	dp[0] = nums[0];
+	dp2[0] = 0;
+	dp[1] = nums[1];
+	dp2[1] = nums[1];
+	dp[2] = nums[2] + dp[0];
+	dp2[2] = nums[2];
+	if (n == 3)
+		ans = max(nums[2], max(nums[1], nums[0]));
+	else {
+		ans = max(dp[2], max(dp[1], dp[0]));
+	}
+	for (int i = 3; i < n; i++) {
+		if (i == n - 1) {
+			dp2[i] = max(dp2[i - 2], dp2[i - 3]) + nums[i];
+			ans = max(ans, dp2[i]);
+		} else {
+			dp[i] = max(dp[i - 2], dp[i - 3]) + nums[i];
+			dp2[i] = max(dp2[i - 2], dp2[i - 3]) + nums[i];
+			ans = max(ans, max(dp[i], dp2[i]));
+		}
+	}
+	printV(dp);
+	printV(dp2);
+	return ans;
+}
+
 void easySet() {
 	// cout << divisorGame(5);
-	VI nums{ -2, 0, 3, -5, 2, -1};
-	NumArray* obj = new NumArray(nums);
-	cout<< obj->sumRange(3, 5);
+	// VI nums{0, 2};
+	// NumArray* obj = new NumArray(nums);
+	// cout << obj->sumRange(3, 5);
 
+
+}
+void mediumSet() {
+	// cout << maxProduct(nums) << endl;
+	VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
+	// cout << minimumTotal(nums);
+	VI num{2, 7, 9, 3, 1};
+	cout << rob(num);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
@@ -725,10 +808,10 @@ void solve() {
 	// 	v.push_back(p1);
 	// }
 	// cout << maxEnvelopes(v);
-	VI nums = {1, 1, 1, 1, 1};
-	int target = 3;
-	// cout << findTargetSumWays(nums, 3);
-	cout << numDecodings("");
+	// VI nums = {1, 1, 1, 1, 1};
+	// int target = 3;
+	// // cout << findTargetSumWays(nums, 3);
+	// cout << numDecodings("");
 	//-------------------------------//
 	// VII k;
 	// for (int i = 0; i < m; i++) {
@@ -764,5 +847,6 @@ void solve() {
 }
 int main() {
 	// solve();
-	easySet();
+	// easySet();
+	mediumSet();
 }
