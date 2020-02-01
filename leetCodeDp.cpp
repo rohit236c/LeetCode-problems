@@ -779,36 +779,17 @@ int rob(vector<int>& nums) {
 	printV(dp2);
 	return ans;
 }
-bool calculateFactor(int num, set<int>s) {
-	for (int i = 2; i <= sqrt(num); i++) {
-		if (num % i == 0) {
-			if (s.find(i) == s.end() || s.find(num / i) == s.end()) return false;
-		}
-	}
-	return true;
-}
 int nthUglyNumber(int n) {
-	set<int>s;
-	VI nums(n + 1, 0);
-	for (int i = 1; i <= min(5, n); i++) {
-		s.insert(i);
-		nums[i] = i;
+	vector<int>dp(n);
+	dp[0] = 1;
+	int p2 = 0, p3 = 0, p5 = 0;
+	for (int i = 1; i < n; i++) {
+		dp[i] = min(dp[p2] * 2, min(dp[p3] * 3, dp[p5] * 5));
+		if (dp[i] == dp[p2] * 2) p2++;
+		if (dp[i] == dp[p3] * 3) p3++;
+		if (dp[i] == dp[p5] * 5) p5++;
 	}
-	if (n <= 5) return nums[n];
-	
-	int k = 6;
-
-	for (int i = 6; i <= 1700; i++) {
-		if (k - 1 == n) break;
-
-		if ((i % 2 == 0 || i % 3 == 0 || i % 5 == 0) && calculateFactor(i, s)) {
-			nums[k++] = i;
-			s.insert(i);
-		}
-
-		// if (k == n) return nums[n];
-	}
-	return nums[n];
+	return dp[n - 1];
 }
 
 void easySet() {
