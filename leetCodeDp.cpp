@@ -779,6 +779,37 @@ int rob(vector<int>& nums) {
 	printV(dp2);
 	return ans;
 }
+bool calculateFactor(int num, set<int>s) {
+	for (int i = 2; i <= sqrt(num); i++) {
+		if (num % i == 0) {
+			if (s.find(i) == s.end() || s.find(num / i) == s.end()) return false;
+		}
+	}
+	return true;
+}
+int nthUglyNumber(int n) {
+	set<int>s;
+	VI nums(n + 1, 0);
+	for (int i = 1; i <= min(5, n); i++) {
+		s.insert(i);
+		nums[i] = i;
+	}
+	if (n <= 5) return nums[n];
+	
+	int k = 6;
+
+	for (int i = 6; i <= 1700; i++) {
+		if (k - 1 == n) break;
+
+		if ((i % 2 == 0 || i % 3 == 0 || i % 5 == 0) && calculateFactor(i, s)) {
+			nums[k++] = i;
+			s.insert(i);
+		}
+
+		// if (k == n) return nums[n];
+	}
+	return nums[n];
+}
 
 void easySet() {
 	// cout << divisorGame(5);
@@ -795,18 +826,19 @@ vector<int> countBits(int num) {
 	dp[0] = 0;
 	dp[1] = 1;
 	for (int i = 2; i <= num; i++) {
-            dp[i] = (i&1) + dp[i/2];
-    }
+		dp[i] = (i & 1) + dp[i / 2];
+	}
 	return dp;
-}	
+}
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
 	// cout << minimumTotal(nums);
 	// VI num{2, 7, 9, 3, 1};
 	// cout << rob(num) << endl;
-	VI ans = countBits(5);
-	printV(ans);
+	// VI ans = countBits(5);
+	// printV(ans);
+	cout << nthUglyNumber(2);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
