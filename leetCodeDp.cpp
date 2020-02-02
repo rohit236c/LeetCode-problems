@@ -811,15 +811,44 @@ vector<int> countBits(int num) {
 	}
 	return dp;
 }
+bool isPerfectSquare(long double x)
+{
+	long double sr = sqrt(x);
+
+	return ((sr - floor(sr)) == 0);
+}
+int numSquares(int n) {
+	VI dp(n + 1, 0);
+	dp[0] = 0;
+	dp[1] = 1;
+	if (isPerfectSquare(n)) return 1;
+
+	for (int i = 2; i <= n; i++) {
+		if (isPerfectSquare(i)) {
+			dp[i] = 1;
+		} else {
+			int ans = INT_MAX;
+			for (int j = 1; j * j <= i; j++) {
+				ans = min(ans, dp[i - (j * j)] + dp[j * j]);
+			}
+			dp[i] = ans;
+		}
+	}
+	return dp[n];
+}
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
-	VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
+	// VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
 	// cout << minimumTotal(nums);
 	// VI num{2, 7, 9, 3, 1};
 	// cout << rob(num) << endl;
 	// VI ans = countBits(5);
 	// printV(ans);
-	cout << nthUglyNumber(2);
+	// cout << nthUglyNumber(2);
+	int number = 13;
+
+
+	cout << numSquares(13);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
