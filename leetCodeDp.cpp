@@ -836,6 +836,26 @@ int numSquares(int n) {
 	}
 	return dp[n];
 }
+int integerBreak(int n) {
+	VI dp(n + 1, 0);
+	dp[0] = 0;
+	dp[1] = 1;
+	for (int i = 2; i <= n; i++) {
+		int ans = INT_MIN;
+		for (int j = 1; j < i; j++) {
+			int ans1 = (i - j) * dp[j];
+			int ans2 = dp[i - j] * dp[j];
+			int ans3 = dp[i - j] * (j);
+			int ans5 = (i - j) * j;
+			int ans4 = max(ans1, max(ans2, ans3));
+
+			ans4 = max(ans4, ans5);
+			ans = max(ans, ans4);
+		}
+		dp[i] = ans;
+	}
+	return dp[n];
+}
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	// VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
@@ -848,7 +868,8 @@ void mediumSet() {
 	int number = 13;
 
 
-	cout << numSquares(13);
+	// cout << numSquares(13);
+	cout << integerBreak(8);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
