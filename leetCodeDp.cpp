@@ -856,6 +856,26 @@ int integerBreak(int n) {
 	}
 	return dp[n];
 }
+int countNumbersWithUniqueDigits(int n) {
+	std::vector<signed int> dp(n + 1, 0);
+	dp[1] = 10;
+	if (n == 1) return 10;
+	for (int i = 2; i <= n; i++) {
+		signed int ans = 1;
+		int cnt = 1;
+		int num = 9;
+		//optimized soln........
+		// ans = ans * (9-i+2);
+		while (cnt < i) {
+			ans = ans * num;
+			num--;
+			cnt++;
+		}
+		ans = ans * 9;
+		dp[i] = ans + dp[i - 1];
+	}
+	return dp[n];
+}
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	// VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
@@ -866,10 +886,10 @@ void mediumSet() {
 	// printV(ans);
 	// cout << nthUglyNumber(2);
 	int number = 13;
-
-
+	// VVI nums{{2, 0, 1}, {1, 0, 2}, {1, 1, 1}};
+	cout << countNumbersWithUniqueDigits(3);
 	// cout << numSquares(13);
-	cout << integerBreak(8);
+	// cout << integerBreak(8);
 }
 void solve() {
 	// VI nums  = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
