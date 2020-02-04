@@ -143,9 +143,37 @@ int histogram(VI arr) {
 	}
 	return maxArea;
 }
+int histogramII(VI nums) {
+
+	stack<int>s;
+	s.push(-1);
+	int i = 0;
+	int n = nums.size();
+	int maxArea = 0;
+	while (i < n) {
+		if (s.size() == 1 || nums[s.top()] <= nums[i]) {
+			s.push(nums[i]);
+			i++;
+		} else {
+			int top = s.top();
+			s.pop();
+			int h = nums[h];
+			int wid = s.top() == -1 ? i : i - s.top() - 1;
+			int area = h * wid;
+			maxArea = max(area, maxArea);
+		}
+	}
+	while (s.size() != -1) {
+		int top = s.top();
+		s.pop();
+		int area = nums[top] * (s.top() == -1 ? i : i - s.top() - 1);
+		maxArea = max(maxArea, area);
+	}
+	return maxArea;
+}
 void solve() {
-	string ans = removeOuterParentheses("");
-	cout << ans << endl;
+	// string ans = removeOuterParentheses("");
+	// cout << ans << endl;
 }
 
 int main() {

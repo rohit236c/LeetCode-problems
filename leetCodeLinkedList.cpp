@@ -38,14 +38,34 @@ ListNode* middleNode(ListNode* head) {
 	return slow;
 
 }
+ListNode* reverse(ListNode*&head, ListNode*prev) {
+	if (head == NULL) {
+		cout << "List is empty!!!";
+		return NULL;
+	} 
+	if (head->next == NULL) return head;
+
+
+	ListNode* newHead = reverse(head->next, head);
+
+	ListNode* temp = head->next;
+	head->next->next = head;
+	head->next = prev;
+
+	return newHead;
+
+}
 void easySet() {
-	ListNode*head = NULL;
+	ListNode* head = NULL;
 	for (int i = 6; i >= 1; i--) {
 		insertAtHead(head, i);
 	}
 	print(head);
-	ListNode*mid = middleNode(head);
-	cout << mid->val;
+	// ListNode* mid = middleNode(head);
+
+	// cout << mid->val;
+	ListNode* rev = reverse(head, NULL);
+	print(rev);
 
 }
 

@@ -303,7 +303,7 @@ public:
 
 	}
 };
-int maximalRectangle(vector<vector<char>>& matrix) {
+int maximalRectangleII(vector<vector<char>>& matrix) {
 	int n = matrix.size(), m = matrix[0].size();
 	Rectangle r = Rectangle(0, 0, 0);
 	std::vector<std::vector<Rectangle>> dp(matrix.size(), std::vector<Rectangle> (matrix[0].size(), r));
@@ -876,6 +876,72 @@ int countNumbersWithUniqueDigits(int n) {
 	}
 	return dp[n];
 }
+int histogram(VI arr) {
+	int n = arr.size();
+	if (n == 0) return 0;
+	if (n == 1) return arr[0];
+	stack <int> s ;
+	int area = 0;
+	int maxArea = 0;
+	int i = 0;
+	int top;
+	while (i < n)
+	{
+		if (s.empty() || arr[s.top()] <= arr[i]) {
+			s.push(i++);
+		}
+		else {
+			top = s.top();
+			s.pop();
+			area = arr[top] * (s.empty() ? i : i - s.top() - 1);
+			maxArea = max(maxArea, area);
+		}
+	}
+	// cout<<s.size() <<endl;
+	while (!s.empty()) {
+		top = s.top();
+		s.pop();
+		area = arr[top] * (s.empty() ? i : i - s.top() - 1);
+		maxArea = max(maxArea, area);
+	}
+	return maxArea;
+}
+int maximalRectangle(vector<vector<char>>& nums) {
+	int n = nums.size();
+	if (n == 0) return 0;
+	int m = nums[0].size();
+	VI dp(m + 1, 0);
+	int ans = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (i == 0) {
+				if (nums[i][j] == '1') {
+					dp[j] = 1;
+				} else {
+					dp[j] = 0;
+				}
+			} else {
+				if (nums[i][j] == '1') {
+					dp[j] += 1;
+				} else {
+					dp[j] = 0;
+				}
+			}
+		}
+		ans = max(ans, histogram(dp));
+	}
+	return ans;
+}
+void hardSet() {
+	std::vector<std::vector<char>> v = {
+		{'1', '0', '1', '0', '0'},
+		{'1', '0', '1', '1', '1'},
+		{'1', '1', '1', '1', '1'},
+		{'1', '0', '0', '1', '0'}
+	};
+	cout << maximalRectangle(v);
+
+}
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	// VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
@@ -944,5 +1010,6 @@ void solve() {
 int main() {
 	// solve();
 	// easySet();
-	mediumSet();
+	// mediumSet();
+	hardSet();
 }
