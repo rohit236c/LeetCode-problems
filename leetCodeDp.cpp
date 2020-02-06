@@ -932,6 +932,18 @@ int maximalRectangle(vector<vector<char>>& nums) {
 	}
 	return ans;
 }
+int longestValidParentheses(string s) {
+	if(s.size() == 0) return 0;
+
+	stack<int>st;
+	st.push(-1);
+	int i = 0;
+	int n = s.size();
+	while(i < n) {
+
+	}
+
+}
 void hardSet() {
 	std::vector<std::vector<char>> v = {
 		{'1', '0', '1', '0', '0'},
