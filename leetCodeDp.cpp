@@ -932,17 +932,32 @@ int maximalRectangle(vector<vector<char>>& nums) {
 	}
 	return ans;
 }
-int longestValidParentheses(string s) {
-	if(s.size() == 0) return 0;
+int superEggDrop(int K, int N) {
+	if(K == 1) return 1;
+	if(N == 1) return 1;
+	
+	VVI dp(K + 1, VI(N + 1, 0));
 
-	stack<int>st;
-	st.push(-1);
-	int i = 0;
-	int n = s.size();
-	while(i < n) {
-
+	for (int i = 1; i <= K; ++i)
+	{
+		for (int j = 1; j <= N; j++) {
+			if (i == 1) {
+				dp[i][j] = j;
+			}
+			else if (j == 1) {
+				dp[i][j] = 1;
+			}
+			else {
+				int ans = INT_MAX;
+				dp[i][j] = ans;
+				for (int x = 1; x <= j; x++) {
+					ans = 1 + max(dp[i - 1][x - 1], dp[i][j - x]);
+					dp[i][j] = min(dp[i][j], ans);
+				}
+			}
+		}
 	}
-
+	return dp[K][N];
 }
 void hardSet() {
 	std::vector<std::vector<char>> v = {
@@ -951,7 +966,8 @@ void hardSet() {
 		{'1', '1', '1', '1', '1'},
 		{'1', '0', '0', '1', '0'}
 	};
-	cout << maximalRectangle(v);
+	// cout << maximalRectangle(v);
+	cout<< superEggDrop(1,2);
 
 }
 void mediumSet() {
