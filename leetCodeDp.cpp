@@ -933,9 +933,9 @@ int maximalRectangle(vector<vector<char>>& nums) {
 	return ans;
 }
 int superEggDrop(int K, int N) {
-	if(K == 1) return 1;
-	if(N == 1) return 1;
-	
+	if (K == 1) return 1;
+	if (N == 1) return 1;
+
 	VVI dp(K + 1, VI(N + 1, 0));
 
 	for (int i = 1; i <= K; ++i)
@@ -959,6 +959,45 @@ int superEggDrop(int K, int N) {
 	}
 	return dp[K][N];
 }
+VVI dp(100, VI(100, -1));
+bool equalSubset(VI nums, int sum1, int sum2, int idx) {
+	if (sum1 == sum2 && idx == nums.size()) return true;
+	else if (sum1 != sum2 && idx == nums.size()) return false;
+
+	if (dp[idx][sum1] != -1) {
+		return (bool)dp[idx][sum1];
+	}
+	bool ansOne = equalSubset(nums, sum1 + nums[idx], sum2, idx + 1);
+	bool ansTwo = equalSubset(nums, sum1, sum2 + nums[idx], idx + 1);
+
+
+
+	dp[idx][sum2] = (int)(ansOne || ansTwo);
+
+	return (ansOne || ansTwo);
+}
+bool equalSubsetII(VI nums) {
+	if (nums.size() == 0) return true;
+	if (nums.size() == 1) return false;
+	int sum = 0;
+	for (int n : nums) sum += n;
+
+	if (sum % 2 != 0) return false;
+
+
+	VVB dp2(nums.size(), VB((sum / 2) + 1, false));
+
+	dp2[0][0] = true;
+	// we try to find the half sum using all elements if yeh possible h toh return true nhi toh return false
+	for (int i = 1; i < nums.size(); i++) {
+		for (int j = 0; j <= (sum / 2) ; j++) {
+			//don't include the number || include the number and bta                          baaki sum bnana possible hai
+			dp2[i][j] = (dp2[i - 1][j]) || (j >= nums[i] ? dp2[i - 1][j - nums[i]] : false);
+		}
+	}
+	return dp2[nums.size() - 1][sum / 2];
+}
+
 void hardSet() {
 	std::vector<std::vector<char>> v = {
 		{'1', '0', '1', '0', '0'},
@@ -967,7 +1006,8 @@ void hardSet() {
 		{'1', '0', '0', '1', '0'}
 	};
 	// cout << maximalRectangle(v);
-	cout<< superEggDrop(1,2);
+	// cout<< superEggDrop(1,2);
+	// leftRecur(8);
 
 }
 void mediumSet() {
@@ -979,9 +1019,16 @@ void mediumSet() {
 	// VI ans = countBits(5);
 	// printV(ans);
 	// cout << nthUglyNumber(2);
-	int number = 13;
+	// int number = 13;
+	VI nums{3,3,3,3};
+	sort(nums.begin(), nums.end());
+	// cout << equalSubsetII(nums);
+	cout << "@" << equalSubset(nums, 0, 0, 0) << endl;
+	cout << endl;
+	// Print2DT(dp);
+
 	// VVI nums{{2, 0, 1}, {1, 0, 2}, {1, 1, 1}};
-	cout << countNumbersWithUniqueDigits(3);
+	// cout << countNumbersWithUniqueDigits(3);
 	// cout << numSquares(13);
 	// cout << integerBreak(8);
 }
@@ -1038,6 +1085,6 @@ void solve() {
 int main() {
 	// solve();
 	// easySet();
-	// mediumSet();
-	hardSet();
+	mediumSet();
+	// hardSet();
 }

@@ -40,8 +40,33 @@ double myPow(double x, int n) {
 		return ans * ans * extra;
 	}
 }
+string getPermutationUtil(string n, int k, string ans, int idx) {
+	if(ans.size() == n.size()) {
+		k--;
+		cout<<ans<<endl;
+		return ans;
+	}
+	ans = ans + n[0];
+	getPermutationUtil(n, k, ans, idx++);
+	ans.pop_back();
+	getPermutationUtil(n, k, ans, idx++);
+}
+
+string getPermutation(int n, int k) {
+	string ans = to_string(n);
+	getPermutationUtil(ans, k, "", 0);
+}
 void solve() {
-	cout << fixed << std::setprecision(5) << myPow(2, -2) ;
+	// cout << fixed << std::setprecision(5) << myPow(2, -2) ;
+	// cout<<getPermutation(123, 3);
+	int i = 200, n = 80;
+	int cnt = 0;
+	while(i >= n) {
+		i = i-2;
+		cnt++;
+		n++;
+	}
+	cout<<cnt;
 }
 
 int main() {
