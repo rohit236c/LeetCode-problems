@@ -998,6 +998,23 @@ bool equalSubsetII(VI nums) {
 	return dp2[nums.size() - 1][sum / 2];
 }
 
+int numTrees(int n) {
+	if (n == 0) return 1;
+
+	VI dp(n + 1, 0);
+	dp[0] = 1;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < i; j++) {
+			dp[i] += dp[j] * dp[i - j - 1];
+		}
+	}
+
+	return dp[n];
+}
+
+
+
 void hardSet() {
 	std::vector<std::vector<char>> v = {
 		{'1', '0', '1', '0', '0'},
@@ -1020,10 +1037,13 @@ void mediumSet() {
 	// printV(ans);
 	// cout << nthUglyNumber(2);
 	// int number = 13;
-	VI nums{3,3,3,3};
+	VI nums{3, 3, 3, 3};
 	sort(nums.begin(), nums.end());
 	// cout << equalSubsetII(nums);
-	cout << "@" << equalSubset(nums, 0, 0, 0) << endl;
+	// cout << "@" << equalSubset(nums, 0, 0, 0) << endl;
+	int h = 9;
+	int b = 5 * 2 + 2 * 3 < (h * 2 ? 5 : 3);
+	cout << "@ = " << b << endl;
 	cout << endl;
 	// Print2DT(dp);
 
