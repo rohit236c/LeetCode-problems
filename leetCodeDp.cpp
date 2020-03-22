@@ -1013,6 +1013,52 @@ int numTrees(int n) {
 	return dp[n];
 }
 
+bool checkWord(string word, VS &wordDict) {
+	for (string s : wordDict)
+	{
+		if (s.compare(word) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+bool wordBreakUtil(string s, set<string>set, int idx, VI &dp) {
+
+	// if (s.length() == 0) return true;
+
+	if (idx == s.length()) return true;
+	if (dp[idx] != -1) return (bool)dp[idx];
+
+	bool res = false;
+	for (int i = idx; i < s.size(); i++) {
+		string str = s.substr(idx, i + 1);
+		cout << str << endl;
+		if (set.find(str) != set.end()) {
+			cout << "here " << str << endl;
+			res = wordBreakUtil(s, set, i + 1, dp);
+			if (res) {
+				dp[idx] = true;
+				return true;
+			}
+		}
+	}
+	dp[idx] = (bool)res;
+	return res;
+}
+bool wordBreak(string s, vector<string>& wordDict) {
+	if (s.size() == 0) return true;
+
+	set<string>set;
+	for (string str : wordDict) {
+		set.insert(str);
+	}
+	std::vector<int> memo(s.size(), -1);
+	bool ans = wordBreakUtil(s, set, 0, memo);
+	printV(memo);
+	return ans;
+}
+
 
 
 void hardSet() {
@@ -1037,14 +1083,21 @@ void mediumSet() {
 	// printV(ans);
 	// cout << nthUglyNumber(2);
 	// int number = 13;
-	VI nums{3, 3, 3, 3};
-	sort(nums.begin(), nums.end());
+	// VI nums{3, 3, 3, 3};
+	string s = "applepenapple";
+	VS dic{"apple", "pen"};
+	// {"a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"};
+
+	cout << wordBreak(s, dic);
+	// cout << (bool)(0);
+	// cout << s.substr(0,3);
+	// sort(nums.begin(), nums.end());
 	// cout << equalSubsetII(nums);
 	// cout << "@" << equalSubset(nums, 0, 0, 0) << endl;
-	int h = 9;
-	int b = 5 * 2 + 2 * 3 < (h * 2 ? 5 : 3);
-	cout << "@ = " << b << endl;
-	cout << endl;
+	// int h = 9;
+	// int b = 5 * 2 + 2 * 3 < (h * 2 ? 5 : 3);
+	// cout << "@ = " << b << endl;
+	// cout << endl;
 	// Print2DT(dp);
 
 	// VVI nums{{2, 0, 1}, {1, 0, 2}, {1, 1, 1}};

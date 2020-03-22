@@ -212,16 +212,134 @@ int pathSum01(Tree *root, int sum) {
 	}
 	return ans;
 }
+int numTrees(int n) {
+	if (n == 0) return 1;
 
+	VI dp(n + 1, 0);
+	dp[0] = 1;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < i; j++) {
+			dp[i] += dp[j] * dp[i - j - 1];
+		}
+	}
+
+	return dp[n];
+}
+
+std::vector<Tree*> generateTreesUtil(int lo, int hi) {
+	int n = hi - lo + 1;
+
+	if (n == 0) {
+		std::vector<Tree*> v;
+		v.push_back(NULL);
+		return v;
+	}
+
+	std::vector<Tree*> ans ;
+	for (int i = lo; i <= hi; i++) {
+		std::vector<Tree*>leftTree = generateTreesUtil(lo, i - 1);
+		std::vector<Tree*> rightTree = generateTreesUtil(i + 1, hi);
+		for (Tree* left : leftTree) {
+			for (Tree* right : rightTree) {
+				Tree* root = new Tree(i);
+				root->left = left;
+				root->right = right;
+				ans.push_back(root);
+			}
+		}
+	}
+	return ans;
+}
+
+void testRun(int n) {
+	for (int k = 1; k < n; k++) {
+		for (int i = 1; i <= n - k; i++) {
+			int j = i + k;
+			for (int root = i; root <= j; root++) {
+				cout << j << " <-j@ " << root << " ";
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
+	cout << "---------------------" << endl;
+	for (int gap = 0; gap < n; gap++) {
+		for (int i = 0, j = gap; j < n; j++, i++) {
+			for (int k = i; k <= j; k++) {
+				cout << k << " @ ";
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
+}
+
+std::vector<Tree*> generateTreesUtilDP(int n) {
+	std::vector<Tree*> ans;
+	if (n == 0) return ans;
+	std::vector<std::vector<Tree*> > dp(n + 1, vector<Tree*>(n + 1, NULL));
+
+	for (int gap = 0; gap < n; gap++) {
+		for (int i = 0; i <= n - k; i++) {
+				
+			if (gap == 0) {
+				dp[i][j] = new Tree(i);
+			} else {
+				for (int root = i; root <= j; root++) {
+					int eL = root - 1;
+					int eR = root + 1;
+					std::vector<Tree*> left, right;
+					if (eL < i) {
+						left.push_back(NULL);
+					} else {
+						left.push_back(dp[i][eL]);
+					}
+					if (eR < j) {
+						right.push_back(NULL);
+					} else {
+						right.push_back(dp[eR][j]);
+					}
+					for (Tree*leftSub : left) {
+						for (Tree* rightSub : right) {
+							Tree* node = new Tree(root);
+							node->left = leftSub;
+							node->right = rightSub;
+							ans.push_back(node);
+						}
+					}
+				}
+			}
+
+		}
+	}
+	return ans;
+}
+
+
+vector<Tree*> generateTrees(int n) {
+	std::vector<Tree*> ans;
+	if (n == 0) return ans;
+
+	return generateTreesUtil(1, n);
+
+}
 int main() {
-	Tree*root = NULL;
+	// Tree*root = NULL;
 	// root = buildTree();
 	// 4,9,0,5,1]
-	buildLevelTree(root);
-	printByLevelQueue(root);
+	// buildLevelTree(root);
+	// printByLevelQueue(root);
 	// pathSum(root, -5);
 	// cout << hasPathSum(root, 22);
-	cout << pathSum01(root, 8) << endl;
-	cout << ans;
+	// cout << pathSum01(root, 8) << endl;
+	// cout << ans;
+	std::vector<Tree*> v =  generateTreesUtilDP(3);
+	for (Tree*node : v) {
+		printByLevelQueue(node);
+		cout << "------" << endl;
+	}
+	// testRun(3);
+	
 	return 0;
 }
