@@ -1046,6 +1046,18 @@ bool wordBreakUtil(string s, set<string>set, int idx, VI &dp) {
 	dp[idx] = (bool)res;
 	return res;
 }
+int arthimeticSum(VI A) {
+	if (A.size() < 3) return 0;
+	VI dp(A.size(), 0);
+	int ans = 0;
+	for (int i = 2; i < A.size(); i++) {
+		if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+			dp[i] = dp[i - 1] + 1;
+			ans += dp[i];
+		}
+	}
+	return ans;
+}
 bool wordBreak(string s, vector<string>& wordDict) {
 	if (s.size() == 0) return true;
 
@@ -1059,7 +1071,36 @@ bool wordBreak(string s, vector<string>& wordDict) {
 	return ans;
 }
 
+int findLongestChain(vector<vector<int>>& pairs) {
+	if (pairs.size() == 0) return 0;
+	VI dp(pairs.size(), 0);
+	sort(pairs.begin(), pairs.end());
 
+	VI LIS;
+	LIS.push_back(pairs[0][1]);
+	int maxLen = 1, len = 1;
+	print2D(pairs);
+	for (int i = 1; i < pairs.size(); ++i)
+	{
+		int low = 0;
+		int high = len - 1;
+		if (pairs[i][1] > LIS[high] && pairs[i][0] > LIS[high]) {
+			LIS.push_back(pairs[i][1]);
+			len++;
+		} else if(pairs[i][1] < LIS[high]) {
+			while (low < high) {
+				int mid = (low + high) / 2;
+				if (LIS[mid] < pairs[i][1]) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
+			LIS[high] = pairs[i][1];
+		}
+	}
+	return LIS.size();
+}
 
 void hardSet() {
 	std::vector<std::vector<char>> v = {
@@ -1084,11 +1125,10 @@ void mediumSet() {
 	// cout << nthUglyNumber(2);
 	// int number = 13;
 	// VI nums{3, 3, 3, 3};
-	string s = "applepenapple";
-	VS dic{"apple", "pen"};
-	// {"a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"};
+	// string s = "applepenapple";
+	// VS dic{"apple", "pen"};
 
-	cout << wordBreak(s, dic);
+	// cout << wordBreak(s, dic);
 	// cout << (bool)(0);
 	// cout << s.substr(0,3);
 	// sort(nums.begin(), nums.end());

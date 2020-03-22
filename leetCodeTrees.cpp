@@ -280,40 +280,40 @@ std::vector<Tree*> generateTreesUtilDP(int n) {
 	if (n == 0) return ans;
 	std::vector<std::vector<Tree*> > dp(n + 1, vector<Tree*>(n + 1, NULL));
 
-	for (int gap = 0; gap < n; gap++) {
-		for (int i = 0; i <= n - k; i++) {
-				
-			if (gap == 0) {
-				dp[i][j] = new Tree(i);
-			} else {
-				for (int root = i; root <= j; root++) {
-					int eL = root - 1;
-					int eR = root + 1;
-					std::vector<Tree*> left, right;
-					if (eL < i) {
-						left.push_back(NULL);
-					} else {
-						left.push_back(dp[i][eL]);
-					}
-					if (eR < j) {
-						right.push_back(NULL);
-					} else {
-						right.push_back(dp[eR][j]);
-					}
-					for (Tree*leftSub : left) {
-						for (Tree* rightSub : right) {
-							Tree* node = new Tree(root);
-							node->left = leftSub;
-							node->right = rightSub;
-							ans.push_back(node);
-						}
-					}
-				}
-			}
+	// for (int gap = 0; gap < n; gap++) {
+	// 	for (int i = 0; i <= n - k; i++) {
 
-		}
-	}
-	return ans;
+	// 		if (gap == 0) {
+	// 			dp[i][j] = new Tree(i);
+	// 		} else {
+	// 			for (int root = i; root <= j; root++) {
+	// 				int eL = root - 1;
+	// 				int eR = root + 1;
+	// 				std::vector<Tree*> left, right;
+	// 				if (eL < i) {
+	// 					left.push_back(NULL);
+	// 				} else {
+	// 					left.push_back(dp[i][eL]);
+	// 				}
+	// 				if (eR < j) {
+	// 					right.push_back(NULL);
+	// 				} else {
+	// 					right.push_back(dp[eR][j]);
+	// 				}
+	// 				for (Tree*leftSub : left) {
+	// 					for (Tree* rightSub : right) {
+	// 						Tree* node = new Tree(root);
+	// 						node->left = leftSub;
+	// 						node->right = rightSub;
+	// 						ans.push_back(node);
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+
+	// 	}
+	// }
+	// return ans;
 }
 
 
@@ -323,6 +323,41 @@ vector<Tree*> generateTrees(int n) {
 
 	return generateTreesUtil(1, n);
 
+}
+int findLongestChain(vector<vector<int>>& pairs) {
+	if (pairs.size() == 0) return 0;
+	VI dp(pairs.size(), 0);
+	sort(pairs.begin(), pairs.end());
+
+	VI LIS;
+	LIS.push_back(pairs[0][1]);
+	int maxLen = 1, len = 1;
+	print2D(pairs);
+	for (int i = 1; i < pairs.size(); ++i)
+	{
+		int low = 0;
+		int high = len - 1;
+		if (pairs[i][1] > LIS[high] && pairs[i][0] > LIS[high]) {
+			LIS.push_back(pairs[i][1]);
+			len++;
+		} else if(pairs[i][1] < LIS[high]) {
+			while (low < high) {
+				int mid = (low + high) / 2;
+				if (LIS[mid] < pairs[i][1]) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
+			LIS[high] = pairs[i][1];
+		}
+	}
+	return LIS.size();
+}
+void solve2() {
+	VVI pairs{{1,2},{2,3},{3,4}};
+	// {{-6,9},{1,6},{8,10},{-1,4},{-6,-2},{-9,8},{-5,3},{0,3}};
+	cout << findLongestChain(pairs);
 }
 int main() {
 	// Tree*root = NULL;
@@ -334,12 +369,13 @@ int main() {
 	// cout << hasPathSum(root, 22);
 	// cout << pathSum01(root, 8) << endl;
 	// cout << ans;
-	std::vector<Tree*> v =  generateTreesUtilDP(3);
-	for (Tree*node : v) {
-		printByLevelQueue(node);
-		cout << "------" << endl;
-	}
+	// std::vector<Tree*> v =  generateTreesUtilDP(3);
+	// for (Tree*node : v) {
+	// printByLevelQueue(node);
+	solve2();
+	// cout << "------" << endl;
+	// }
 	// testRun(3);
-	
+
 	return 0;
 }
