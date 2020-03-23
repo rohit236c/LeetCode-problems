@@ -1137,6 +1137,47 @@ vector<int> largestDivisibleSubset(vector<int>& nums) {
 
 	return largestDivisibleSubsetUtil(nums);
 }
+int countSquares(vector<vector<int>>& matrix) {
+	int r = matrix.size();
+	if (r == 0) return 0;
+	int c = matrix[0].size();
+
+	VVI dp(r, VI(c, 0));
+
+	for (int i = 0; i < r; ++i)
+	{
+		for (int j = 0; j < c; ++j)
+		{
+			if (i == 0 || j == 0) {
+				dp[i][j] = matrix[i][j];
+			} else if (matrix[i][j] == 1) {
+				dp[i][j] = 1 + (min(dp[i - 1][j], min(dp[i][j - 1], dp[i - 1][j - 1])));
+			}
+		}
+	}
+
+	VI nums(300, 0);
+	for (int i = 0; i < r; ++i)
+	{
+		for (int j = 0; j < c; ++j)
+		{
+			if (dp[i][j] != 0) {
+				nums[dp[i][j]]++;
+			}
+		}
+	}
+	int ans = 0;
+	for (int i = 1; i < nums.size(); i++) {
+		int cur = 0;
+		for (int j = i + 1; j < nums.size(); j++) {
+			cur += nums[j];
+		}
+		ans += cur + nums[i];
+	}
+	cout << ans<< endl;
+	return ans;
+
+}
 
 void hardSet() {
 	std::vector<std::vector<char>> v = {
@@ -1150,6 +1191,7 @@ void hardSet() {
 	// leftRecur(8);
 
 }
+
 void mediumSet() {
 	// cout << maxProduct(nums) << endl;
 	// VVI nums = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
@@ -1163,7 +1205,8 @@ void mediumSet() {
 	// VI nums{3, 3, 3, 3};
 	// string s = "applepenapple";
 	// VS dic{"apple", "pen"};
-
+	VVI m{{0, 1, 1, 1}, {1, 1, 1, 1}, {0, 1, 1, 1}};
+	cout << countSquares(m);
 	// cout << wordBreak(s, dic);
 	// cout << (bool)(0);
 	// cout << s.substr(0,3);
@@ -1175,9 +1218,9 @@ void mediumSet() {
 	// cout << "@ = " << b << endl;
 	// cout << endl;
 	// Print2DT(dp);
-	VI nums{2, 4, 6, 9, 19, 81, 729};
-	VI ans = largestDivisibleSubset(nums);
-	printV(ans);
+	// VI nums{2, 4, 6, 9, 19, 81, 729};
+	// VI ans = largestDivisibleSubset(nums);
+	// printV(ans);
 	// VVI nums{{2, 0, 1}, {1, 0, 2}, {1, 1, 1}};
 	// cout << countNumbersWithUniqueDigits(3);
 	// cout << numSquares(13);
