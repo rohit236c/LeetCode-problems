@@ -1087,7 +1087,7 @@ int findLongestChain(vector<vector<int>>& pairs) {
 		if (pairs[i][1] > LIS[high] && pairs[i][0] > LIS[high]) {
 			LIS.push_back(pairs[i][1]);
 			len++;
-		} else if(pairs[i][1] < LIS[high]) {
+		} else if (pairs[i][1] < LIS[high]) {
 			while (low < high) {
 				int mid = (low + high) / 2;
 				if (LIS[mid] < pairs[i][1]) {
@@ -1100,6 +1100,42 @@ int findLongestChain(vector<vector<int>>& pairs) {
 		}
 	}
 	return LIS.size();
+}
+VI largestDivisibleSubsetUtil(VI nums) {
+	sort(nums.begin(), nums.end());
+
+	VI dp(nums.size(), 0);
+	VI parent(nums.size(), 0);
+	int maxNum = 0, maxIndex  = 0;
+
+	for (int i{(int)nums.size() - 1}; i >= 0; i--) {
+		for (int j = i; j < nums.size(); j++) {
+			if (nums[j] % nums[i] == 0 && dp[i] < 1 + dp[j]) {
+				dp[i] = 1 + dp[j];
+				parent[i] = j;
+			}
+			if (dp[i] > maxNum) {
+				maxNum = dp[i];
+				maxIndex = i;
+			}
+		}
+	}
+	VI ans;
+	cout << endl;
+	for (int i = 0; i < maxIndex; ++i)
+	{
+		ans.push_back(nums[maxIndex]);
+		maxIndex = parent[maxIndex];
+	}
+	return ans;
+
+}
+
+vector<int> largestDivisibleSubset(vector<int>& nums) {
+	VI ans;
+	if (nums.size() == 0) return ans;
+
+	return largestDivisibleSubsetUtil(nums);
 }
 
 void hardSet() {
@@ -1139,7 +1175,9 @@ void mediumSet() {
 	// cout << "@ = " << b << endl;
 	// cout << endl;
 	// Print2DT(dp);
-
+	VI nums{2, 4, 6, 9, 19, 81, 729};
+	VI ans = largestDivisibleSubset(nums);
+	printV(ans);
 	// VVI nums{{2, 0, 1}, {1, 0, 2}, {1, 1, 1}};
 	// cout << countNumbersWithUniqueDigits(3);
 	// cout << numSquares(13);
