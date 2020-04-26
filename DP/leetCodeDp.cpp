@@ -1174,11 +1174,114 @@ int countSquares(vector<vector<int>>& matrix) {
 		}
 		ans += cur + nums[i];
 	}
-	cout << ans<< endl;
 	return ans;
 
 }
+int mctFromLeafValuesUtil(VI arr, int &maxLeaf, int curSum, int idx) {
+	if (idx == arr.size() - 1) {
+		maxLeaf = arr[idx];
+		return 0;
+	}
+	if (arr.size() >= 2 && idx == arr.size() - 2) {
+		maxLeaf = max(arr[idx], arr[idx + 1]);
+		return arr[idx] * arr[idx + 1];
+	}
 
+	int sum = 0;
+	for (int i = idx; i < arr.size() - 2; i++) {
+		int leftAns = mctFromLeafValuesUtil(arr, maxLeaf, curSum, i + 1);
+
+		leftAns = (arr[i] * maxLeaf) + leftAns;
+		int rightAns = mctFromLeafValuesUtil(arr, maxLeaf, curSum , i + 2);
+		int stTwo = (arr[i] * arr[i + 1]);
+		rightAns = (max(arr[i], arr[i + 1])) * maxLeaf + stTwo;
+		sum += min(leftAns, rightAns);
+	}
+
+	return sum;
+}
+int mctFromLeafValues(VI arr) {
+	int ms = 0;
+	return mctFromLeafValuesUtil(arr, ms, 0, 0);
+}
+
+bool stoneGame(vector<int>& piles) {
+	if (piles.size() == 1) return true;
+	int n = piles.size();
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		sum += piles[i];
+	}
+	VVI dp(n + 1, VI(n + 1, 0));
+	for (int gap = 0; gap < n; gap++) {
+		for (int i = 0, j = gap; j < n; i++, j++) {
+			if (gap == 0) {
+				dp[i][j] = piles[i];
+			} else if (gap == 1) {
+				dp[i][j] = max(piles[i], piles[j]);
+			} else {
+				int leftSell = piles[i] + dp[i + 1][j];
+				int rightSell = piles[j] + dp[i][j - 1];
+				dp[i][j] = max(leftSell, rightSell);
+			}
+		}
+	}
+	if (dp[0][n - 1] > sum / 2) return true;
+	else return false;
+
+}
+int stoneGameII(vector<int>& piles) {
+	if (piles.size() == 1) return piles[0];
+	int n = piles.size();
+	VVI dp(n + 1, VI(n + 1, 0));
+
+	for (int gap = 0; gap < n; gap++) {
+		for (int i = 0, j = gap; j < n; j++, i++) {
+			if (gap == 0) {
+				dp[i][j] = piles[i];
+			} else if (gap == 1) {
+				dp[i][j] = piles[i] + piles[j];
+			} else if (gap == 2) {
+				dp[i][j] = dp[i][j - 1];
+			}
+			else {
+				int M = 1, X = 1, k = i;
+				int sum = 0, maxSum = 0;
+				while (X <= 2 * M) {
+					sum += piles[k];
+					int idx = k + X * 2 + 1;
+					int rest = idx <= j ? dp[idx][j] : 0;
+
+					maxSum = max(sum + rest, maxSum);
+					k++;
+					X++;
+				}
+				dp[i][j] = maxSum;
+			}
+		}
+	}
+	print2D(dp);
+	return dp[0][n - 1];
+
+}
+int longestCommonSubsequence(string text1, string text2) {
+	VVI dp(text1.size() + 1, VI(text2.size() + 1, 0));
+	int n = text1.size();
+	int m = text2.size();
+	for(int i = 0; i <= text1.size(); i++) {
+		for(int j = 0; j <= text2.size(); j++) {
+			if(i == 0 || j == 0) {
+				dp[i][j] = 0;
+			} else if(text1[i-1] == text2[j-1]) {
+				dp[i][j] = 1+ dp[i-1][j-1];
+			} else {
+				dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+			}
+		}
+	}
+return dp[n][m];
+
+}
 void hardSet() {
 	std::vector<std::vector<char>> v = {
 		{'1', '0', '1', '0', '0'},
@@ -1205,8 +1308,11 @@ void mediumSet() {
 	// VI nums{3, 3, 3, 3};
 	// string s = "applepenapple";
 	// VS dic{"apple", "pen"};
-	VVI m{{0, 1, 1, 1}, {1, 1, 1, 1}, {0, 1, 1, 1}};
-	cout << countSquares(m);
+	// VVI m{{0, 1, 1, 1}, {1, 1, 1, 1}, {0, 1, 1, 1}};
+	// cout << countSquares(m);
+	VI arr{1, 2, 3, 4, 5};
+	cout << stoneGameII(arr);
+	// cout << mctFromLeafValues(arr) << endl;
 	// cout << wordBreak(s, dic);
 	// cout << (bool)(0);
 	// cout << s.substr(0,3);
