@@ -23,27 +23,48 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-vector<int> minSubsequence(vector<int>& nums) {
-	sort(nums.begin(), nums.end(), greater<int>());
-	int sum = 0;
-	for (int n : nums) {
-		sum += n;
+
+int minSetSize(vector<int>& arr) {
+	unordered_map<int,int>m;
+	int size = arr.size();
+	for(int n: arr) {
+		m[n]++;
 	}
-	vector<int>array;
 	int ans = 0;
-	for (int n : nums) {
-		if (ans > sum) {
-			break;
-		}
-		ans += n;
-		sum -= n;
-		array.push_back(n);
+	priority_queue<PII>pq;
+	for(auto i: m) {
+		pq.push({i.second,i.first});
 	}
-	return array;
+	int f = 0;
+	while(ans < (size/2)) {
+		int top = pq.top().first;
+		ans += top;
+		f++;
+		pq.pop();
+	}
+	return f;
+}
+int minSetSizeII(vector<int>& arr) {
+	VI nums(1e5,0);
+	int size = arr.size();
+	for(int n: arr) {
+		nums[n]++;
+	}
+	sort(nums.begin(), nums.end(), greater<int>());
+	int ans = 0;
+	int idx = 0;
+	while(ans < (size/2)) {
+		ans += nums[idx];
+		idx++;
+	}
+	
+	return idx;
 }
 
 void solve() {
-	cout << ('a' > 'b') <<" ";
+	VI arr{2,28,92,30,100,52,28,48,91,27,66,19,11,53,91,95,74,51,65,65,96,81,21,55,98,3,2,89,99,57,78,34,50,2,57,76,23,90,89,36,53,22,73,59,95,45};
+
+	cout << minSetSizeII(arr);
 }
 
 int main() {
